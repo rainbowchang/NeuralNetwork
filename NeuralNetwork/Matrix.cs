@@ -48,8 +48,8 @@ namespace NeuralNetwork
 
         public static Matrix operator +(Matrix m1, Matrix m2)
         {
-            Matrix result = new Matrix(m1.RowNumber, m1.RowNumber);
-            for (int i = 0; i < m1.ColNumber; i++)
+            Matrix result = new Matrix(m1.RowNumber, m1.ColNumber);
+            for (int i = 0; i < m1.RowNumber; i++)
                 for (int j = 0; j < m1.ColNumber; j++)
                     result.item[i, j] = m1.item[i, j] + m2.item[i, j];
             return result;

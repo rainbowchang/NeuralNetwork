@@ -96,7 +96,7 @@ namespace NeuralNetwork
         /// </summary>
         private BP()
         {
-            Miu = 0.1;
+            Miu = 0.01;
             Delta = 0.0;
         }
         /// <summary>
@@ -175,6 +175,13 @@ namespace NeuralNetwork
             }
         }
 
+        public Vector Calculate(Vector vectorInput)
+        {
+            Input_Layer_Vector = vectorInput;
+            Calculate();
+            return Output_Layer_Vector;
+        }
+
         /// <summary>
         /// 网络训练函数。
         /// </summary>
@@ -184,7 +191,7 @@ namespace NeuralNetwork
         {
             this.Input_Layer_Vector = Input_Vector;
             this.Template_Vector = Template_Vector;
-            for (int a = 0; a < 2; a++)
+            for (int a = 0; a < 6; a++)
             {
                 Calculate();
                 CalculateError();
@@ -308,6 +315,45 @@ namespace NeuralNetwork
             r.Close();
             fs.Close();
             return bp;
+        }
+
+        /// <summary>
+        /// 将连接系数和偏移函数保存到文件。
+        /// </summary>
+        /// <param name="Filename"></param>
+        public void Save(String Filename)
+        {
+            FileStream fs = new FileStream(Filename, FileMode.Create);
+            BinaryWriter w = new BinaryWriter(fs);
+            w.Write((int)Input_Layer_Count);
+            w.Write((int)Hidden_Layer_Count);
+            w.Write((int)Output_Layer_Count);
+
+            for (int i = 0; i < Hidden_Layer_Count; i++)
+                for (int j = 0; j < Input_Layer_Count; j++)
+                {
+                    w.Write(Input_Hiddene_Coefficient_Matrix.item[i, j]);
+                }
+
+
+            for (int i = 0; i < Hidden_Layer_Count; i++)
+            {
+                w.Write(Hidden_Offset_Vector.item[i]);
+            }
+
+            for (int k = 0; k < Output_Layer_Count; k++)
+                for (int i = 0; i < Hidden_Layer_Count; i++)
+                {
+                    w.Write(Hidden_Output_Coefficient_Matrix.item[k, i]);
+                }
+
+            for (int k = 0; k < Output_Layer_Count; k++)
+            {
+                w.Write(Output_Offset_Vector.item[k]);
+            }
+
+            w.Close();
+            fs.Close();
         }
     }
 }

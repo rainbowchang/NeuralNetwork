@@ -34,7 +34,8 @@ namespace NeuralNetwork
 
         public double NeuronFunctionDerivative(double x)
         {
-            double y = Math.Exp(x) / ((1 + Math.Exp(x)) * (1 + Math.Exp(x)));
+            double a = Math.Exp(x);
+            double y = a / ((1 + a) * (1 + a));
             return y;
         }
     }
