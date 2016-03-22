@@ -96,7 +96,7 @@ namespace NeuralNetwork
         /// </summary>
         private BP()
         {
-            Miu = 0.01;
+            Miu = 0.05;
             Delta = 0.0;
         }
         /// <summary>
@@ -160,14 +160,14 @@ namespace NeuralNetwork
         public void Calculate()
         {
             Hidden_Layer_Vector = Input_Hiddene_Coefficient_Matrix * Input_Layer_Vector;
-            Hidden_Layer_Vector = Hidden_Layer_Vector + Hidden_Offset_Vector;
+            Hidden_Layer_Vector.add(Hidden_Offset_Vector);
             for (int i = 0; i < Hidden_Layer_Count; i++)
             {
                 Hidden_Layer_Vector.item[i] = Function1.NeuronFunction(Hidden_Layer_Vector.item[i]);
             }
 
             Output_Layer_Vector = Hidden_Output_Coefficient_Matrix * Hidden_Layer_Vector;
-            Output_Layer_Vector = Output_Layer_Vector + Output_Offset_Vector;
+            Output_Layer_Vector.add(Output_Offset_Vector);
             for (int k = 0; k < Output_Layer_Count; k++)
             {
                 Output_Layer_Vector.item[k] = Function2.NeuronFunction(Output_Layer_Vector.item[k]);
@@ -194,15 +194,19 @@ namespace NeuralNetwork
             for (int a = 0; a < 6; a++)
             {
                 Calculate();
+                Console.WriteLine("Calculate finish: " + DateTime.Now.ToString());
                 CalculateError();
                 CalculateDelta_Hidden_Output_Coefficient();
                 CalculateDelta_Input_Hidden_Coefficient();
-
-                Hidden_Output_Coefficient_Matrix += Hidden_Output_Coefficient_Change_Matrix;
-                Input_Hiddene_Coefficient_Matrix += Input_Hidden_Coefficient_Change_Matrix;
-                Console.Write("Mark    line 203");
-                Hidden_Offset_Vector += Hidden_Offset_Chang_Vector;
-                Output_Offset_Vector += Output_Offset_Change_Vector;
+                Console.WriteLine("CalculateDelta_Input_Hidden_Coefficient finish: " + DateTime.Now.ToString());
+                Hidden_Output_Coefficient_Matrix.add(Hidden_Output_Coefficient_Change_Matrix);
+                Input_Hiddene_Coefficient_Matrix.add(Input_Hidden_Coefficient_Change_Matrix);
+                Console.WriteLine("Matrix adjust finish: " + DateTime.Now.ToString());
+                Hidden_Offset_Vector.add(Hidden_Offset_Chang_Vector);
+                Output_Offset_Vector.add(Output_Offset_Change_Vector);
+                Console.WriteLine("Vector adjust finish: " + DateTime.Now.ToString());
+                if (Delta < 0.0001)
+                    break;
             }
         }
 
@@ -230,7 +234,6 @@ namespace NeuralNetwork
         /// </summary>
         private void CalculateDelta_Hidden_Output_Coefficient()
         {
-            Console.WriteLine("CalculateDelta_Hidden_Output_Coefficient");
             for (int k = 0; k < Output_Layer_Count; k++)
             {
                 double delta = Function2.NeuronFunctionDerivative(Output_Layer_Vector.item[k]) * (Template_Vector.item[k] - Output_Layer_Vector.item[k]);
@@ -251,7 +254,6 @@ namespace NeuralNetwork
         /// </summary>
         private void CalculateDelta_Input_Hidden_Coefficient()
         {
-            Console.WriteLine("CalculateDelta_Input_Hidden_Coefficient");
             for (int i = 0; i < Hidden_Layer_Count; i++)
             {
                 double delta = 0;

@@ -63,6 +63,7 @@ namespace NeuralNetwork
                     Console.WriteLine(String.Format("N = {0}, I = {1}", n, i));
                     Console.WriteLine(String.Format("Template = {0}, {1}, {2}, {3};", output.item[0] * 20, output.item[1] * 20, output.item[2] * 20, output.item[3] * 20));
                     bpNetwork.Training(input, output);
+                    GC.Collect();
                 }
             Console.WriteLine("Training finish.");
             Console.ReadLine();
@@ -71,6 +72,7 @@ namespace NeuralNetwork
         private void btn_training_Click(object sender, EventArgs e)
         {
             Thread thread = new Thread(new ThreadStart(training));
+            thread.Priority = ThreadPriority.Highest;
             thread.Start();
         }
 
@@ -100,7 +102,6 @@ namespace NeuralNetwork
                 }
                 Console.WriteLine(String.Format("{0}, {1}, {2}, {3};", stockData[0, 0], stockData[0, 1], stockData[0, 2], stockData[0, 3]));
                 Console.WriteLine(String.Format("{0}, {1}, {2}, {3};", stockData[2, 0], stockData[2, 1], stockData[2, 2], stockData[2, 3]));
-                Console.ReadLine();
             }
             finally
             {
