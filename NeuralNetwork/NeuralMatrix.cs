@@ -78,7 +78,7 @@ namespace NeuralNetwork
         /// </summary>
         Matrix Input_Hidden_Coefficient_Delta_Matrix;
         /// <summary>
-        /// 输入层到隐含层的系数矩阵
+        /// 输入层到隐含层的系数偏移矩阵
         /// </summary>
         Matrix Hidden_Output_Coefficient_Change_Matrix;
         /// <summary>

@@ -13,11 +13,11 @@ namespace NeuralNetwork
 {
     public partial class Form1 : Form
     {
-        const int input_days = 100;
+        const int input_days = 10;
         const double xishu = 20.0;
         Vector input = new Vector(input_days * 4);
         Vector output = new Vector(4);
-        BP bpNetwork = new BP(input_days * 4, 200, 4);
+        BP bpNetwork = new BP(input_days * 4, 20, 4);
 
         double[,] stockData = new double[500, 4];
 

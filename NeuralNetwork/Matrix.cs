@@ -46,14 +46,14 @@ namespace NeuralNetwork
             }
         }
 
-        //public static Matrix operator +(Matrix m1, Matrix m2)
-        //{
-        //    Matrix result = new Matrix(m1.RowNumber, m1.ColNumber);
-        //    for (int i = 0; i < m1.RowNumber; i++)
-        //        for (int j = 0; j < m1.ColNumber; j++)
-        //            result.item[i, j] = m1.item[i, j] + m2.item[i, j];
-        //    return result;
-        //}
+        public static Matrix operator +(Matrix m1, Matrix m2)
+        {
+            Matrix result = new Matrix(m1.RowNumber, m1.ColNumber);
+            for (int i = 0; i < m1.RowNumber; i++)
+                for (int j = 0; j < m1.ColNumber; j++)
+                    result.item[i, j] = m1.item[i, j] + m2.item[i, j];
+            return result;
+        }
         public void add(Matrix m2)
         {
             DateTime dt = DateTime.Now;
@@ -93,19 +93,19 @@ namespace NeuralNetwork
         /// <param name="Vector1"></param>
         /// <param name="Vector2"></param>
         /// <returns></returns>
-        //public static Vector operator + (Vector Vector1, Vector Vector2)
-        //{
-        //    if (Vector1.UpperBound != Vector2.UpperBound)
-        //        throw new Exception("Two Vectors are not same upper bound");
+        public static Vector operator +(Vector Vector1, Vector Vector2)
+        {
+            if (Vector1.UpperBound != Vector2.UpperBound)
+                throw new Exception("Two Vectors are not same upper bound");
 
-        //    int length = Vector1.UpperBound;
-        //    Vector result = new Vector(length);
+            int length = Vector1.UpperBound;
+            Vector result = new Vector(length);
 
-        //    for (int x = 0; x < length; x++)
-        //        result.Elements[x] = Vector1.Elements[x] + Vector2.Elements[x];
+            for (int x = 0; x < length; x++)
+                result.Elements[x] = Vector1.Elements[x] + Vector2.Elements[x];
 
-        //    return result;
-        //}
+            return result;
+        }
 
         public void add(Vector Vector2)
         {
