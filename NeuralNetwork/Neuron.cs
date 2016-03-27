@@ -97,7 +97,14 @@ namespace NeuralNetwork
             else if (k == 0)
                 return 1.0;
             else if (k == 1)
-                return x;
+            {
+                //if (x > 1)
+                //    return 1.0;
+                //else if (x < -1)
+                //    return -1.0;
+                //else
+                    return x;
+            }
             else
                 return ((NeuronFunction(x, (k - 1))) * (2.0 * k - 1) * x / (k) - NeuronFunction(x, (k - 2)) * (k - 1) / k);
         }
@@ -113,7 +120,14 @@ namespace NeuralNetwork
             else if (k == 0)
                 return 0.0;
             else if (k == 1)
-                return 1.0;
+            {
+                //if (x > 1.0)
+                //    return 0;
+                //else if (x < -1.0)
+                //    return 0;
+                //else
+                    return 1.0;
+            }
             else
                 return ((NeuronFunction(x, (k - 1))) * (2.0 * k - 1) / (k) + (NeuronFunctionDerivative(x, (k - 1))) * (2.0 * k - 1) * x / (k) - NeuronFunctionDerivative(x, (k - 2)) * (k - 1) / k);
         }

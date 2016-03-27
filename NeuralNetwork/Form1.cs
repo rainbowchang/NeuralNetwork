@@ -14,7 +14,7 @@ namespace NeuralNetwork
     public partial class Form1 : Form
     {
         const int input_days = 200;
-        const double xishu = 20.0;
+        const double xishu = 200.0;
         Vector input = new Vector(input_days * 4);
         Vector output = new Vector(4);
         BP bpNetwork = new BP(input_days * 4, 50, 4);
@@ -38,7 +38,7 @@ namespace NeuralNetwork
             }
 
             output = bpNetwork.Calculate(input);
-            Console.WriteLine(String.Format("Result = {0}, {1}, {2}, {3};", output.item[0] * 20, output.item[1] * 20, output.item[2] * 20, output.item[3] * 20));
+            Console.WriteLine(String.Format("Result = {0}, {1}, {2}, {3};", output.item[0] * xishu, output.item[1] * xishu, output.item[2] * xishu, output.item[3] * xishu));
         }
 
         private void training()
@@ -60,9 +60,16 @@ namespace NeuralNetwork
                     output.item[2] = stockData[i - 1, 2];
                     output.item[3] = stockData[i - 1, 3];
                     Console.WriteLine(String.Format("N = {0}, I = {1}", n, i));
-                    Console.WriteLine(String.Format("Template = {0}, {1}, {2}, {3};", output.item[0] * 20, output.item[1] * 20, output.item[2] * 20, output.item[3] * 20));
-                    bpNetwork.Training(input, output);
-                    GC.Collect();
+                    Console.WriteLine(String.Format("Template = {0}, {1}, {2}, {3};", output.item[0] * xishu, output.item[1] * xishu, output.item[2] * xishu, output.item[3] * xishu));
+                    try
+                    {
+                        bpNetwork.Training(input, output);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        return;
+                    }
                 }
             Console.WriteLine("Training finish.");
             Console.ReadLine();

@@ -7,7 +7,7 @@ using System.IO;
 namespace NeuralNetwork
 {
     interface INeuralMatrix
-    {    }
+    { }
 
     class BP : INeuralMatrix
     {
@@ -98,8 +98,8 @@ namespace NeuralNetwork
         /// </summary>
         double Delta;
 
-        INeuron Function1 = new Logsig();
-        INeuron Function2 = new Pureline();
+        //INeuron Function1 = new Logsig();
+        //INeuron Function2 = new Pureline();
 
         /// <summary>
         /// 私有构造函数，适合于从文件读取连接系数的时候从Load函数内部调用。
@@ -121,8 +121,8 @@ namespace NeuralNetwork
             this.Hidden_Layer_Count = hiddenLayerNumber;
             this.Output_Layer_Count = outputLayerCount;
 
-            FirstNeuronVector = new Logsig[hiddenLayerNumber];
-            SecondNeuronVector = new Pureline[outputLayerCount];
+            FirstNeuronVector = new INeuron[hiddenLayerNumber];
+            SecondNeuronVector = new INeuron[outputLayerCount];
 
             Input_Layer_Vector = new Vector(Input_Layer_Count);
             Hidden_Layer_Vector = new Vector(Hidden_Layer_Count);
@@ -165,6 +165,20 @@ namespace NeuralNetwork
 
             for (int k = 0; k < Output_Layer_Count; k++)
                 Output_Offset_Vector.item[k] = rnd.NextDouble() - 0.5;
+
+            for (int k = 0; k < Hidden_Layer_Count; k++)
+            {
+                Legendre legendre = new Legendre();
+                legendre.K = k;
+                FirstNeuronVector[k] = legendre;
+
+            }
+            for (int k = 0; k < Output_Layer_Count; k++)
+            {
+                Pureline pureline = new Pureline();
+                SecondNeuronVector[k] = pureline;
+            }
+
         }
 
         /// <summary>
@@ -176,14 +190,14 @@ namespace NeuralNetwork
             Hidden_Layer_Vector.add(Hidden_Offset_Vector);
             for (int i = 0; i < Hidden_Layer_Count; i++)
             {
-                Hidden_Layer_Vector.item[i] = Function1.NeuronFunction(Hidden_Layer_Vector.item[i]);
+                Hidden_Layer_Vector.item[i] = FirstNeuronVector[i].NeuronFunction(Hidden_Layer_Vector.item[i]);
             }
 
             Output_Layer_Vector = Hidden_Output_Coefficient_Matrix * Hidden_Layer_Vector;
             Output_Layer_Vector.add(Output_Offset_Vector);
             for (int k = 0; k < Output_Layer_Count; k++)
             {
-                Output_Layer_Vector.item[k] = Function2.NeuronFunction(Output_Layer_Vector.item[k]);
+                Output_Layer_Vector.item[k] = SecondNeuronVector[k].NeuronFunction(Output_Layer_Vector.item[k]);
                 Console.WriteLine("{0}={1}  ", k, Output_Layer_Vector.item[k].ToString());
             }
         }
@@ -196,7 +210,7 @@ namespace NeuralNetwork
         }
 
         /// <summary>
-        /// 网络训练函数。
+        /// 网络训练函数。 如果误差超大会抛出错误。
         /// </summary>
         /// <param name="Input_Vector"></param>
         /// <param name="Template_Vector"></param>
@@ -209,6 +223,8 @@ namespace NeuralNetwork
                 Calculate();
                 Console.WriteLine("Calculate finish: " + DateTime.Now.ToString());
                 CalculateError();
+                if (Delta > 1000000.0)
+                    throw new Exception("So much error, stop training.");
                 CalculateDelta_Hidden_Output_Coefficient();
                 CalculateDelta_Input_Hidden_Coefficient();
                 Console.WriteLine("CalculateDelta_Input_Hidden_Coefficient finish: " + DateTime.Now.ToString());
@@ -218,7 +234,7 @@ namespace NeuralNetwork
                 Hidden_Offset_Vector.add(Hidden_Offset_Chang_Vector);
                 Output_Offset_Vector.add(Output_Offset_Change_Vector);
                 Console.WriteLine("Vector adjust finish: " + DateTime.Now.ToString());
-                if (Delta < 0.000001)
+                if (Delta < 0.0000001)
                     break;
             }
         }
@@ -249,7 +265,7 @@ namespace NeuralNetwork
         {
             for (int k = 0; k < Output_Layer_Count; k++)
             {
-                double delta = Function2.NeuronFunctionDerivative(Output_Layer_Vector.item[k]) * (Template_Vector.item[k] - Output_Layer_Vector.item[k]);
+                double delta = SecondNeuronVector[k].NeuronFunctionDerivative(Output_Layer_Vector.item[k]) * (Template_Vector.item[k] - Output_Layer_Vector.item[k]);
 
                 for (int i = 0; i < Hidden_Layer_Count; i++)
                 {
@@ -274,7 +290,7 @@ namespace NeuralNetwork
                 {
                     delta += Hidden_Output_Coefficient_Delta_Matrix.item[k, i] * Hidden_Output_Coefficient_Matrix.item[k, i];
                 }
-                delta *= Function1.NeuronFunctionDerivative(Hidden_Layer_Vector.item[i]);
+                delta *= FirstNeuronVector[i].NeuronFunctionDerivative(Hidden_Layer_Vector.item[i]);
                 for (int j = 0; j < Input_Layer_Count; j++)
                 {
                     Input_Hidden_Coefficient_Delta_Matrix.item[i, j] = delta;
