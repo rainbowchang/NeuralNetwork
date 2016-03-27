@@ -6,12 +6,8 @@ using System.IO;
 
 namespace NeuralNetwork
 {
-    class INeuralMatrix
-    {
-
-
-    }
-
+    interface INeuralMatrix
+    {    }
 
     class BP : INeuralMatrix
     {
@@ -85,7 +81,21 @@ namespace NeuralNetwork
         /// 输入层到隐含层的Delta系数矩阵
         /// </summary>
         Matrix Hidden_Output_Coefficient_Delta_Matrix;
+        /// <summary>
+        /// 第一层神经元向量
+        /// </summary>
+        INeuron[] FirstNeuronVector;
+        /// <summary>
+        /// 第二层神经元向量
+        /// </summary>
+        INeuron[] SecondNeuronVector;
+        /// <summary>
+        /// 学习步长
+        /// </summary>
         double Miu;
+        /// <summary>
+        /// 误差
+        /// </summary>
         double Delta;
 
         INeuron Function1 = new Logsig();
@@ -110,6 +120,9 @@ namespace NeuralNetwork
             this.Input_Layer_Count = inputLayerCount;
             this.Hidden_Layer_Count = hiddenLayerNumber;
             this.Output_Layer_Count = outputLayerCount;
+
+            FirstNeuronVector = new Logsig[hiddenLayerNumber];
+            SecondNeuronVector = new Pureline[outputLayerCount];
 
             Input_Layer_Vector = new Vector(Input_Layer_Count);
             Hidden_Layer_Vector = new Vector(Hidden_Layer_Count);
@@ -205,7 +218,7 @@ namespace NeuralNetwork
                 Hidden_Offset_Vector.add(Hidden_Offset_Chang_Vector);
                 Output_Offset_Vector.add(Output_Offset_Change_Vector);
                 Console.WriteLine("Vector adjust finish: " + DateTime.Now.ToString());
-                if (Delta < 0.0001)
+                if (Delta < 0.000001)
                     break;
             }
         }

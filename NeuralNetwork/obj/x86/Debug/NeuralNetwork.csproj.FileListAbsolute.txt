@@ -1,0 +1,13 @@
+E:\vs.net\NeuralNetwork\NeuralNetwork\obj\x86\Debug\NeuralNetwork.Properties.Resources.resources
+E:\vs.net\NeuralNetwork\NeuralNetwork\obj\x86\Debug\NeuralNetwork.csproj.GenerateResource.Cache
+E:\vs.net\NeuralNetwork\NeuralNetwork\bin\Debug\NeuralNetwork.exe
+E:\vs.net\NeuralNetwork\NeuralNetwork\bin\Debug\NeuralNetwork.pdb
+E:\vs.net\NeuralNetwork\NeuralNetwork\obj\x86\Debug\NeuralNetwork.exe
+E:\vs.net\NeuralNetwork\NeuralNetwork\obj\x86\Debug\NeuralNetwork.pdb
+E:\GitHub\NeuralNetwork\NeuralNetwork\obj\x86\Debug\NeuralNetwork.exe
+E:\GitHub\NeuralNetwork\NeuralNetwork\obj\x86\Debug\NeuralNetwork.pdb
+E:\GitHub\NeuralNetwork\NeuralNetwork\bin\Debug\NeuralNetwork.exe
+E:\GitHub\NeuralNetwork\NeuralNetwork\bin\Debug\NeuralNetwork.pdb
+E:\GitHub\NeuralNetwork\NeuralNetwork\obj\x86\Debug\NeuralNetwork.Form1.resources
+E:\GitHub\NeuralNetwork\NeuralNetwork\obj\x86\Debug\NeuralNetwork.Properties.Resources.resources
+E:\GitHub\NeuralNetwork\NeuralNetwork\obj\x86\Debug\NeuralNetwork.csproj.GenerateResource.Cache

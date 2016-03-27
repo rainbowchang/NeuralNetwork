@@ -13,11 +13,11 @@ namespace NeuralNetwork
 {
     public partial class Form1 : Form
     {
-        const int input_days = 10;
+        const int input_days = 200;
         const double xishu = 20.0;
         Vector input = new Vector(input_days * 4);
         Vector output = new Vector(4);
-        BP bpNetwork = new BP(input_days * 4, 20, 4);
+        BP bpNetwork = new BP(input_days * 4, 50, 4);
 
         double[,] stockData = new double[500, 4];
 
@@ -39,14 +39,13 @@ namespace NeuralNetwork
 
             output = bpNetwork.Calculate(input);
             Console.WriteLine(String.Format("Result = {0}, {1}, {2}, {3};", output.item[0] * 20, output.item[1] * 20, output.item[2] * 20, output.item[3] * 20));
-            Console.ReadLine();
         }
 
         private void training()
         {
-            AnalysisTable(@"C:\Users\Administrator\Desktop\table01.csv");
-            for (int n = 0; n <= 4; n++)
-                for (int i = 1; i <= 200; i++)
+            AnalysisTable(@"C:\Users\zhangchanghong\Desktop\table.csv");
+            for (int n = 0; n <= 6; n++)
+                for (int i = 200; i >=1; i--)
                 {
                     for (int j = 0; j < input_days; j++)
                     {
@@ -89,7 +88,7 @@ namespace NeuralNetwork
                 int tableRowNo = 0;
                 for (int i = 2; i < 1000; i++)
                 {
-                    if (excel.Cells[i, 2].Value != 0.0)
+                    if (excel.Cells[i, 6].Value > 0.00001)
                     {
                         stockData[tableRowNo, 0] = excel.Cells[i, 2].Value / xishu;
                         stockData[tableRowNo, 1] = excel.Cells[i, 3].Value / xishu;
@@ -102,6 +101,11 @@ namespace NeuralNetwork
                 }
                 Console.WriteLine(String.Format("{0}, {1}, {2}, {3};", stockData[0, 0], stockData[0, 1], stockData[0, 2], stockData[0, 3]));
                 Console.WriteLine(String.Format("{0}, {1}, {2}, {3};", stockData[2, 0], stockData[2, 1], stockData[2, 2], stockData[2, 3]));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.ReadLine();
             }
             finally
             {
