@@ -43,7 +43,7 @@ namespace NeuralNetwork
 
         private void training()
         {
-            AnalysisTable(@"C:\Users\zhangchanghong\Desktop\table.csv");
+            AnalysisTable(@"C:\Users\Administrator\Desktop\table01.csv");
             for (int n = 0; n <= 6; n++)
                 for (int i = 200; i >=1; i--)
                 {

@@ -168,8 +168,8 @@ namespace NeuralNetwork
 
             for (int k = 0; k < Hidden_Layer_Count; k++)
             {
-                Legendre legendre = new Legendre();
-                legendre.K = k;
+                Logsig legendre = new Logsig();
+                //legendre.K = k;
                 FirstNeuronVector[k] = legendre;
 
             }

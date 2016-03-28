@@ -12,3 +12,12 @@ E:\GitHub\NeuralNetwork\NeuralNetwork\obj\x86\Debug\NeuralNetwork.Form1.resource
 E:\GitHub\NeuralNetwork\NeuralNetwork\obj\x86\Debug\NeuralNetwork.Properties.Resources.resources
 E:\GitHub\NeuralNetwork\NeuralNetwork\obj\x86\Debug\NeuralNetwork.csproj.GenerateResource.Cache
 E:\GitHub\NeuralNetwork\NeuralNetwork\obj\x86\Debug\NeuralNetwork.csprojResolveAssemblyReference.cache
+G:\Code\VS.net\NeuralNetwork\NeuralNetwork\obj\x86\Debug\NeuralNetwork.exe
+G:\Code\VS.net\NeuralNetwork\NeuralNetwork\obj\x86\Debug\NeuralNetwork.pdb
+G:\Code\VS.net\NeuralNetwork\NeuralNetwork\bin\Debug\NeuralNetwork.exe
+G:\Code\VS.net\NeuralNetwork\NeuralNetwork\bin\Debug\NeuralNetwork.pdb
+G:\Code\VS.net\NeuralNetwork\NeuralNetwork\obj\x86\Debug\NeuralNetwork.csprojResolveAssemblyReference.cache
+G:\Code\VS.net\NeuralNetwork\NeuralNetwork\obj\x86\Debug\NeuralNetwork.Form1.resources
+G:\Code\VS.net\NeuralNetwork\NeuralNetwork\obj\x86\Debug\NeuralNetwork.Properties.Resources.resources
+G:\Code\VS.net\NeuralNetwork\NeuralNetwork\obj\x86\Debug\NeuralNetwork.csproj.GenerateResource.Cache
+G:\Code\VS.net\NeuralNetwork\NeuralNetwork\bin\Debug\NeuralNetwork.exe.config
