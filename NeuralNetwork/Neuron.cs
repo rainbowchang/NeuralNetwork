@@ -95,7 +95,7 @@ namespace NeuralNetwork
             if (k < 0)
                 throw new Exception("Function k must >= 0 .");
             if (x > 1.0 || x < -1.0)
-                throw new Exception("Function input must between -1 and 1 .");
+                throw new Exception(String.Format("Function input must between -1 and 1, but the input is {0}.", x));
             
             if (k == 0)
                 return 1.0;

@@ -21,3 +21,4 @@ G:\Code\VS.net\NeuralNetwork\NeuralNetwork\obj\x86\Debug\NeuralNetwork.Form1.res
 G:\Code\VS.net\NeuralNetwork\NeuralNetwork\obj\x86\Debug\NeuralNetwork.Properties.Resources.resources
 G:\Code\VS.net\NeuralNetwork\NeuralNetwork\obj\x86\Debug\NeuralNetwork.csproj.GenerateResource.Cache
 G:\Code\VS.net\NeuralNetwork\NeuralNetwork\bin\Debug\NeuralNetwork.exe.config
+E:\GitHub\NeuralNetwork\NeuralNetwork\bin\Debug\NeuralNetwork.exe.config

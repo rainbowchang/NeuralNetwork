@@ -169,6 +169,7 @@ namespace NeuralNetwork
             for (int k = 0; k < Hidden_Layer_Count; k++)
             {
                 Logsig legendre = new Logsig();
+                //Legendre legendre = new Legendre();
                 //legendre.K = k;
                 FirstNeuronVector[k] = legendre;
 
@@ -218,7 +219,7 @@ namespace NeuralNetwork
         {
             this.Input_Layer_Vector = Input_Vector;
             this.Template_Vector = Template_Vector;
-            for (int a = 0; a < 6; a++)
+            for (int a = 0; a < 2; a++)
             {
                 Calculate();
                 Console.WriteLine("Calculate finish: " + DateTime.Now.ToString());
@@ -234,7 +235,7 @@ namespace NeuralNetwork
                 Hidden_Offset_Vector.add(Hidden_Offset_Chang_Vector);
                 Output_Offset_Vector.add(Output_Offset_Change_Vector);
                 Console.WriteLine("Vector adjust finish: " + DateTime.Now.ToString());
-                if (Delta < 0.0000001)
+                if (Delta < 0.00000001)
                     break;
             }
         }

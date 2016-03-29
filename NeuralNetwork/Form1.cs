@@ -16,7 +16,7 @@ namespace NeuralNetwork
         const int input_days = 200;
         const int output_days = 3;
         const int training_length = 300;//训练的样本数
-        const int hidden_layor_count = 100;
+        const int hidden_layor_count = 400;
         /// <summary>
         /// 输入向量归一化时候的系数
         /// </summary>
@@ -59,21 +59,24 @@ namespace NeuralNetwork
             }
 
             Vector output = bpNetwork.Calculate(input);
-            Console.WriteLine(String.Format("Result = {0}, {1}, {2}, {3};", output.item[0] * coefficient + offset, output.item[1] * coefficient + offset, output.item[2] * coefficient + offset, output.item[3] * coefficient + offset));
+            Console.Write("Result = ");
+            for (int i = 0; i < output.UpperBound; i++)
+                Console.Write(String.Format("{0} ", output.item[i] * coefficient + offset));
+            //Console.WriteLine(String.Format("Result = {0}, {1}, {2}, {3};", output.item[0] * coefficient + offset, output.item[1] * coefficient + offset, output.item[2] * coefficient + offset, output.item[3] * coefficient + offset));
         }
 
         private void training()
         {
             try
             {
-                AnalysisTable(@"C:\Users\Administrator\Desktop\table01.csv");
+                AnalysisTable(@"E:\GitHub\NeuralNetwork\NeuralNetwork\bin\Debug\table.csv");
             }
             catch (Exception)
             {
                 return;
             }
             normalize();
-            for (int n = 0; n <= 6; n++)  //n是循环次数
+            for (int n = 0; n <= 12; n++)  //n是循环次数
                 for (int i = training_length; i >= output_days; i--)
                 {
                     for (int j = 0; j < input_days; j++)
@@ -165,15 +168,15 @@ namespace NeuralNetwork
         {
             double diff = max - min;
             double mid = min + (diff / 2.0);
-            for (int r = 0; r < UpboundRow; r++)
-            {
-                stockData[r, 0] = (stockData[r, 0] - mid) / diff;
-                stockData[r, 1] = (stockData[r, 1] - mid) / diff;
-                stockData[r, 2] = (stockData[r, 2] - mid) / diff;
-                stockData[r, 3] = (stockData[r, 3] - mid) / diff;
-            }
             coefficient = diff;
             offset = mid;
+            for (int r = 0; r < UpboundRow; r++)
+            {
+                stockData[r, 0] = (stockData[r, 0] - mid) / coefficient;
+                stockData[r, 1] = (stockData[r, 1] - mid) / coefficient;
+                stockData[r, 2] = (stockData[r, 2] - mid) / coefficient;
+                stockData[r, 3] = (stockData[r, 3] - mid) / coefficient;
+            }
         }
 
         private void btn_save_Click(object sender, EventArgs e)
