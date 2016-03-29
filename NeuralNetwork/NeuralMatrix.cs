@@ -212,8 +212,8 @@ namespace NeuralNetwork
         /// <summary>
         /// 网络训练函数。 如果误差超大会抛出错误。
         /// </summary>
-        /// <param name="Input_Vector"></param>
-        /// <param name="Template_Vector"></param>
+        /// <param name="Input_Vector">输入层</param>
+        /// <param name="Template_Vector">训练层</param>
         public void Training(Vector Input_Vector, Vector Template_Vector)
         {
             this.Input_Layer_Vector = Input_Vector;

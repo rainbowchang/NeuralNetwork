@@ -94,17 +94,13 @@ namespace NeuralNetwork
         {
             if (k < 0)
                 throw new Exception("Function k must >= 0 .");
-            else if (k == 0)
+            if (x > 1.0 || x < -1.0)
+                throw new Exception("Function input must between -1 and 1 .");
+            
+            if (k == 0)
                 return 1.0;
             else if (k == 1)
-            {
-                //if (x > 1)
-                //    return 1.0;
-                //else if (x < -1)
-                //    return -1.0;
-                //else
-                    return x;
-            }
+                return x;
             else
                 return ((NeuronFunction(x, (k - 1))) * (2.0 * k - 1) * x / (k) - NeuronFunction(x, (k - 2)) * (k - 1) / k);
         }
@@ -113,21 +109,18 @@ namespace NeuralNetwork
         {
             return NeuronFunctionDerivative(x, k);
         }
+
         private double NeuronFunctionDerivative(double x, int k)
         {
             if (k < 0)
                 throw new Exception("Function k must >= 0 .");
-            else if (k == 0)
+            if (x > 1.0 || x < -1.0)
+                throw new Exception(String.Format("Function input must between -1 and 1, but the input is {0}.", x));
+
+            if (k == 0)
                 return 0.0;
             else if (k == 1)
-            {
-                //if (x > 1.0)
-                //    return 0;
-                //else if (x < -1.0)
-                //    return 0;
-                //else
-                    return 1.0;
-            }
+                return 1.0;
             else
                 return ((NeuronFunction(x, (k - 1))) * (2.0 * k - 1) / (k) + (NeuronFunctionDerivative(x, (k - 1))) * (2.0 * k - 1) * x / (k) - NeuronFunctionDerivative(x, (k - 2)) * (k - 1) / k);
         }

@@ -14,12 +14,33 @@ namespace NeuralNetwork
     public partial class Form1 : Form
     {
         const int input_days = 200;
-        const double xishu = 200.0;
-        Vector input = new Vector(input_days * 4);
-        Vector output = new Vector(4);
-        BP bpNetwork = new BP(input_days * 4, 50, 4);
+        const int output_days = 3;
+        const int training_length = 300;//训练的样本数
+        const int hidden_layor_count = 100;
+        /// <summary>
+        /// 输入向量归一化时候的系数
+        /// </summary>
+        double coefficient = 0.0;
+        /// <summary>
+        /// 输入向量归一化时候的偏移量
+        /// </summary>
+        double offset = 0.0;
 
-        double[,] stockData = new double[500, 4];
+        double max = 0, min = 0;
+
+        /// <summary>
+        /// 输入向量
+        /// </summary>
+        Vector input = new Vector(input_days * 4);
+
+        /// <summary>
+        /// 学习向量
+        /// </summary>
+        Vector Template = new Vector(output_days * 4);
+        BP bpNetwork = new BP(input_days * 4, hidden_layor_count, 4);
+
+        const int UpboundRow = 600;
+        double[,] stockData = new double[UpboundRow, 4];
 
         public Form1()
         {
@@ -37,15 +58,23 @@ namespace NeuralNetwork
                 input.item[j * 4 + 3] = stockData[j, 3];
             }
 
-            output = bpNetwork.Calculate(input);
-            Console.WriteLine(String.Format("Result = {0}, {1}, {2}, {3};", output.item[0] * xishu, output.item[1] * xishu, output.item[2] * xishu, output.item[3] * xishu));
+            Vector output = bpNetwork.Calculate(input);
+            Console.WriteLine(String.Format("Result = {0}, {1}, {2}, {3};", output.item[0] * coefficient + offset, output.item[1] * coefficient + offset, output.item[2] * coefficient + offset, output.item[3] * coefficient + offset));
         }
 
         private void training()
         {
-            AnalysisTable(@"C:\Users\Administrator\Desktop\table01.csv");
-            for (int n = 0; n <= 6; n++)
-                for (int i = 200; i >=1; i--)
+            try
+            {
+                AnalysisTable(@"C:\Users\Administrator\Desktop\table01.csv");
+            }
+            catch (Exception)
+            {
+                return;
+            }
+            normalize();
+            for (int n = 0; n <= 6; n++)  //n是循环次数
+                for (int i = training_length; i >= output_days; i--)
                 {
                     for (int j = 0; j < input_days; j++)
                     {
@@ -53,17 +82,20 @@ namespace NeuralNetwork
                         input.item[j * 4 + 1] = stockData[i + j, 1];
                         input.item[j * 4 + 2] = stockData[i + j, 2];
                         input.item[j * 4 + 3] = stockData[i + j, 3];
-                        //Console.WriteLine(String.Format("N = {0}, I = {1}, J = {2}", n, i, j));
                     }
-                    output.item[0] = stockData[i - 1, 0];
-                    output.item[1] = stockData[i - 1, 1];
-                    output.item[2] = stockData[i - 1, 2];
-                    output.item[3] = stockData[i - 1, 3];
+                    for (int d = 0; d < output_days; d++)
+                    {
+                        Template.item[d * 4 + 0] = stockData[i - d - 1, 0];
+                        Template.item[d * 4 + 1] = stockData[i - d - 1, 1];
+                        Template.item[d * 4 + 2] = stockData[i - d - 1, 2];
+                        Template.item[d * 4 + 3] = stockData[i - d - 1, 3];
+                    }
+
                     Console.WriteLine(String.Format("N = {0}, I = {1}", n, i));
-                    Console.WriteLine(String.Format("Template = {0}, {1}, {2}, {3};", output.item[0] * xishu, output.item[1] * xishu, output.item[2] * xishu, output.item[3] * xishu));
+                    Console.WriteLine(String.Format("Template = {0}, {1}, {2}, {3};", Template.item[0], Template.item[1], Template.item[2], Template.item[3]));
                     try
                     {
-                        bpNetwork.Training(input, output);
+                        bpNetwork.Training(input, Template);
                     }
                     catch (Exception ex)
                     {
@@ -97,13 +129,21 @@ namespace NeuralNetwork
                 {
                     if (excel.Cells[i, 6].Value > 0.00001)
                     {
-                        stockData[tableRowNo, 0] = excel.Cells[i, 2].Value / xishu;
-                        stockData[tableRowNo, 1] = excel.Cells[i, 3].Value / xishu;
-                        stockData[tableRowNo, 2] = excel.Cells[i, 4].Value / xishu;
-                        stockData[tableRowNo, 3] = excel.Cells[i, 5].Value / xishu;
+                        stockData[tableRowNo, 0] = excel.Cells[i, 2].Value;
+                        if (max < stockData[tableRowNo, 0]) max = stockData[tableRowNo, 0];
+                        if (min > stockData[tableRowNo, 0]) min = stockData[tableRowNo, 0];
+                        stockData[tableRowNo, 1] = excel.Cells[i, 3].Value;
+                        if (max < stockData[tableRowNo, 1]) max = stockData[tableRowNo, 1];
+                        if (min > stockData[tableRowNo, 1]) min = stockData[tableRowNo, 1];
+                        stockData[tableRowNo, 2] = excel.Cells[i, 4].Value;
+                        if (max < stockData[tableRowNo, 2]) max = stockData[tableRowNo, 2];
+                        if (min > stockData[tableRowNo, 2]) min = stockData[tableRowNo, 2];
+                        stockData[tableRowNo, 3] = excel.Cells[i, 5].Value;
+                        if (max < stockData[tableRowNo, 3]) max = stockData[tableRowNo, 3];
+                        if (min > stockData[tableRowNo, 3]) min = stockData[tableRowNo, 3];
                         tableRowNo++;
                     }
-                    if (tableRowNo >= 500)
+                    if (tableRowNo >= UpboundRow)
                         break;
                 }
                 Console.WriteLine(String.Format("{0}, {1}, {2}, {3};", stockData[0, 0], stockData[0, 1], stockData[0, 2], stockData[0, 3]));
@@ -113,11 +153,27 @@ namespace NeuralNetwork
             {
                 Console.WriteLine(ex.Message);
                 Console.ReadLine();
+                throw ex;
             }
             finally
             {
                 excel.Quit();
             }
+        }
+
+        private void normalize()
+        {
+            double diff = max - min;
+            double mid = min + (diff / 2.0);
+            for (int r = 0; r < UpboundRow; r++)
+            {
+                stockData[r, 0] = (stockData[r, 0] - mid) / diff;
+                stockData[r, 1] = (stockData[r, 1] - mid) / diff;
+                stockData[r, 2] = (stockData[r, 2] - mid) / diff;
+                stockData[r, 3] = (stockData[r, 3] - mid) / diff;
+            }
+            coefficient = diff;
+            offset = mid;
         }
 
         private void btn_save_Click(object sender, EventArgs e)
