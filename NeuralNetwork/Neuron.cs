@@ -5,7 +5,7 @@ using System.Text;
 
 namespace NeuralNetwork
 {
-    interface INeuron
+    public interface INeuron
     {
         /// <summary>
         /// 激活函数
@@ -25,7 +25,7 @@ namespace NeuralNetwork
     /// <summary>
     /// 对数-S型函数
     /// </summary>
-    class Logsig : INeuron
+    public class Logsig : INeuron
     {
         public double NeuronFunction(double x)
         {
@@ -44,7 +44,7 @@ namespace NeuralNetwork
     /// <summary>
     /// 双曲正切S型函数
     /// </summary>
-    class Tansig : INeuron
+    public class Tansig : INeuron
     {
         public double NeuronFunction(double x)
         {
@@ -63,7 +63,7 @@ namespace NeuralNetwork
     /// <summary>
     /// 线形函数
     /// </summary>
-    class Pureline : INeuron
+    public class Pureline : INeuron
     {
         public double NeuronFunction(double x)
         {
@@ -76,7 +76,7 @@ namespace NeuralNetwork
         }
     }
 
-    class Legendre : INeuron
+    public class Legendre : INeuron
     {
         private int k;
         public int K

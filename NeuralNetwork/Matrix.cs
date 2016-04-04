@@ -5,7 +5,7 @@ using System.Text;
 
 namespace NeuralNetwork
 {
-    class Matrix
+    public class Matrix
     {
         private double[,] Elements;
         public double[,] item
@@ -66,7 +66,7 @@ namespace NeuralNetwork
 
     }
 
-    class Vector
+    public class Vector
     {
         private int _Number ;
         public int UpperBound

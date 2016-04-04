@@ -28,21 +28,22 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.btn_training = new System.Windows.Forms.Button();
+            this.btn_bptraining = new System.Windows.Forms.Button();
             this.btn_predict = new System.Windows.Forms.Button();
             this.btn_load = new System.Windows.Forms.Button();
             this.btn_save = new System.Windows.Forms.Button();
+            this.btn_legendretraining = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // btn_training
+            // btn_bptraining
             // 
-            this.btn_training.Location = new System.Drawing.Point(567, 284);
-            this.btn_training.Name = "btn_training";
-            this.btn_training.Size = new System.Drawing.Size(75, 23);
-            this.btn_training.TabIndex = 0;
-            this.btn_training.Text = "Train";
-            this.btn_training.UseVisualStyleBackColor = true;
-            this.btn_training.Click += new System.EventHandler(this.btn_training_Click);
+            this.btn_bptraining.Location = new System.Drawing.Point(567, 284);
+            this.btn_bptraining.Name = "btn_bptraining";
+            this.btn_bptraining.Size = new System.Drawing.Size(75, 23);
+            this.btn_bptraining.TabIndex = 0;
+            this.btn_bptraining.Text = "BPTrain";
+            this.btn_bptraining.UseVisualStyleBackColor = true;
+            this.btn_bptraining.Click += new System.EventHandler(this.btn_training_Click);
             // 
             // btn_predict
             // 
@@ -62,6 +63,7 @@
             this.btn_load.TabIndex = 2;
             this.btn_load.Text = "Load";
             this.btn_load.UseVisualStyleBackColor = true;
+            this.btn_load.Click += new System.EventHandler(this.btn_load_Click);
             // 
             // btn_save
             // 
@@ -73,15 +75,26 @@
             this.btn_save.UseVisualStyleBackColor = true;
             this.btn_save.Click += new System.EventHandler(this.btn_save_Click);
             // 
+            // btn_legendretraining
+            // 
+            this.btn_legendretraining.Location = new System.Drawing.Point(470, 240);
+            this.btn_legendretraining.Name = "btn_legendretraining";
+            this.btn_legendretraining.Size = new System.Drawing.Size(172, 23);
+            this.btn_legendretraining.TabIndex = 4;
+            this.btn_legendretraining.Text = "LegedreTraining";
+            this.btn_legendretraining.UseVisualStyleBackColor = true;
+            this.btn_legendretraining.Click += new System.EventHandler(this.btn_legendretraining_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(654, 319);
+            this.Controls.Add(this.btn_legendretraining);
             this.Controls.Add(this.btn_save);
             this.Controls.Add(this.btn_load);
             this.Controls.Add(this.btn_predict);
-            this.Controls.Add(this.btn_training);
+            this.Controls.Add(this.btn_bptraining);
             this.Name = "Form1";
             this.Text = "Form1";
             this.ResumeLayout(false);
@@ -90,10 +103,11 @@
 
         #endregion
 
-        private System.Windows.Forms.Button btn_training;
+        private System.Windows.Forms.Button btn_bptraining;
         private System.Windows.Forms.Button btn_predict;
         private System.Windows.Forms.Button btn_load;
         private System.Windows.Forms.Button btn_save;
+        private System.Windows.Forms.Button btn_legendretraining;
     }
 }
 

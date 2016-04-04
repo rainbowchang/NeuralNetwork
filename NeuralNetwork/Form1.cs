@@ -13,33 +13,26 @@ namespace NeuralNetwork
 {
     public partial class Form1 : Form
     {
-        const int input_days = 200;
-        const int output_days = 3;
-        const int training_length = 300;//训练的样本数
-        const int hidden_layor_count = 400;
-        /// <summary>
-        /// 输入向量归一化时候的系数
-        /// </summary>
-        double coefficient = 0.0;
-        /// <summary>
-        /// 输入向量归一化时候的偏移量
-        /// </summary>
-        double offset = 0.0;
-
+        int input_days = 200;
+        int output_days = 3;
+        int training_length = 300;//训练的样本数
+        int hidden_layor_count = 400;
+        double coefficient;
+        double offset;
         double max = 0, min = 0;
 
         /// <summary>
         /// 输入向量
         /// </summary>
-        Vector input = new Vector(input_days * 4);
+        Vector input;// = new Vector(input_days * 4);
 
         /// <summary>
         /// 学习向量
         /// </summary>
-        Vector Template = new Vector(output_days * 4);
-        BP bpNetwork = new BP(input_days * 4, hidden_layor_count, 4);
+        Vector Template;// = new Vector(output_days * 4);
+        NeuralMatrix bpNetwork;// = new BP(input_days * 4, hidden_layor_count, output_days * 4);
 
-        const int UpboundRow = 600;
+        const int UpboundRow = 900;
         double[,] stockData = new double[UpboundRow, 4];
 
         public Form1()
@@ -47,35 +40,26 @@ namespace NeuralNetwork
             InitializeComponent();
         }
 
-        private void btn_predict_Click(object sender, EventArgs e)
-        {
-
-            for (int j = 0; j < input_days; j++)
-            {
-                input.item[j * 4 + 0] = stockData[j, 0];
-                input.item[j * 4 + 1] = stockData[j, 1];
-                input.item[j * 4 + 2] = stockData[j, 2];
-                input.item[j * 4 + 3] = stockData[j, 3];
-            }
-
-            Vector output = bpNetwork.Calculate(input);
-            Console.Write("Result = ");
-            for (int i = 0; i < output.UpperBound; i++)
-                Console.Write(String.Format("{0} ", output.item[i] * coefficient + offset));
-            //Console.WriteLine(String.Format("Result = {0}, {1}, {2}, {3};", output.item[0] * coefficient + offset, output.item[1] * coefficient + offset, output.item[2] * coefficient + offset, output.item[3] * coefficient + offset));
-        }
-
+        /*
+         * BP神经网络的输入是天数*4、输出是天数*4 、隐含层的数量暂定400
+         * 输入列分别开、高、低、收
+         * 输入数组stockdata的行号有低到高表示日期由近及遥远过去
+         * 输入向量随序列增加4个一组逐渐往过去延伸
+         * 训练向量（输出）随序号增加逐渐往未来延伸
+         */
         private void training()
         {
             try
             {
-                AnalysisTable(@"E:\GitHub\NeuralNetwork\NeuralNetwork\bin\Debug\table.csv");
+                loadData(@"E:\GitHub\NeuralNetwork\NeuralNetwork\bin\Debug\600036.csv");
             }
             catch (Exception)
             {
                 return;
             }
             normalize();
+            bpNetwork.coefficient = coefficient;
+            bpNetwork.offset = offset;
             for (int n = 0; n <= 12; n++)  //n是循环次数
                 for (int i = training_length; i >= output_days; i--)
                 {
@@ -95,10 +79,9 @@ namespace NeuralNetwork
                     }
 
                     Console.WriteLine(String.Format("N = {0}, I = {1}", n, i));
-                    Console.WriteLine(String.Format("Template = {0}, {1}, {2}, {3};", Template.item[0], Template.item[1], Template.item[2], Template.item[3]));
                     try
                     {
-                        bpNetwork.Training(input, Template);
+                        bpNetwork.Training(input, Template, 5);
                     }
                     catch (Exception ex)
                     {
@@ -112,12 +95,20 @@ namespace NeuralNetwork
 
         private void btn_training_Click(object sender, EventArgs e)
         {
+            input_days = 200;
+            output_days = 3;
+            training_length = 300;//训练的样本数
+            hidden_layor_count = 400;
+            input = new Vector(input_days * 4);
+            Template = new Vector(output_days * 4);
+            bpNetwork = new BP(input_days * 4, hidden_layor_count, output_days * 4);
+
             Thread thread = new Thread(new ThreadStart(training));
-            thread.Priority = ThreadPriority.Highest;
+            //thread.Priority = ThreadPriority.Highest;
             thread.Start();
         }
 
-        public void AnalysisTable(string path)
+        private void loadData(string path)
         {
             Excel._Application excel = null;
             try
@@ -149,8 +140,6 @@ namespace NeuralNetwork
                     if (tableRowNo >= UpboundRow)
                         break;
                 }
-                Console.WriteLine(String.Format("{0}, {1}, {2}, {3};", stockData[0, 0], stockData[0, 1], stockData[0, 2], stockData[0, 3]));
-                Console.WriteLine(String.Format("{0}, {1}, {2}, {3};", stockData[2, 0], stockData[2, 1], stockData[2, 2], stockData[2, 3]));
             }
             catch (Exception ex)
             {
@@ -168,20 +157,63 @@ namespace NeuralNetwork
         {
             double diff = max - min;
             double mid = min + (diff / 2.0);
-            coefficient = diff;
+            coefficient = diff*10.0;
             offset = mid;
+            normalize(coefficient, offset);
+        }
+
+        private void normalize(double coefficient, double offset)
+        {
             for (int r = 0; r < UpboundRow; r++)
             {
-                stockData[r, 0] = (stockData[r, 0] - mid) / coefficient;
-                stockData[r, 1] = (stockData[r, 1] - mid) / coefficient;
-                stockData[r, 2] = (stockData[r, 2] - mid) / coefficient;
-                stockData[r, 3] = (stockData[r, 3] - mid) / coefficient;
+                stockData[r, 0] = (stockData[r, 0] - offset) / coefficient;
+                stockData[r, 1] = (stockData[r, 1] - offset) / coefficient;
+                stockData[r, 2] = (stockData[r, 2] - offset) / coefficient;
+                stockData[r, 3] = (stockData[r, 3] - offset) / coefficient;
             }
         }
 
         private void btn_save_Click(object sender, EventArgs e)
         {
-            bpNetwork.Save(@"C:\Users\Administrator\Desktop\nn.data");
+            bpNetwork.Save(@"E:\GitHub\NeuralNetwork\NeuralNetwork\bin\Debug\600036.data");
+        }
+
+        private void btn_load_Click(object sender, EventArgs e)
+        {
+            bpNetwork.Load(@"E:\GitHub\NeuralNetwork\NeuralNetwork\bin\Debug\600036.data");
+            loadData(@"E:\GitHub\NeuralNetwork\NeuralNetwork\bin\Debug\600036.csv");
+            normalize(bpNetwork.coefficient, bpNetwork.offset);
+        }
+
+        private void btn_predict_Click(object sender, EventArgs e)
+        {
+            for (int j = 0; j < input_days; j++)
+            {
+                input.item[j * 4 + 0] = stockData[j, 0];
+                input.item[j * 4 + 1] = stockData[j, 1];
+                input.item[j * 4 + 2] = stockData[j, 2];
+                input.item[j * 4 + 3] = stockData[j, 3];
+            }
+
+            Vector output = bpNetwork.Calculate(input);
+            Console.Write("Result = ");
+            for (int i = 0; i < output.UpperBound; i++)
+                Console.Write(String.Format("{0} ", (output.item[i] * bpNetwork.coefficient + bpNetwork.offset).ToString("F")));
+        }
+
+        private void btn_legendretraining_Click(object sender, EventArgs e)
+        {
+            input_days = 150;
+            output_days = 2;
+            training_length = 100;//训练的样本数
+            hidden_layor_count = 25;
+            input = new Vector(input_days * 4);
+            Template = new Vector(output_days * 4);
+            bpNetwork = new LegendreMatrix(input_days * 4, hidden_layor_count, output_days * 4);
+
+            Thread thread = new Thread(new ThreadStart(training));
+            //thread.Priority = ThreadPriority.Highest;
+            thread.Start();
         }
     }
 }
