@@ -6,7 +6,7 @@ namespace NeuralNetwork
 {
     public partial class Form1
     {
-        private const int imageHeight = 100;
+        private const int imageHeight = 200;
         private const int imageWidth = 500;
         private Image DailyKBackgroundImange = new Bitmap(imageWidth, imageHeight);
         private double DailyKMax = 1.0;
@@ -52,8 +52,8 @@ namespace NeuralNetwork
             double close = data[3];
             double max = data[1];
             double min = data[2];
-            double maxWidth = 10.0;
-            double minWidth = 3.0;
+            float maxWidth = 10.0f;
+            float minWidth = 3.0f;
 
             Color currentColor;
 
@@ -70,9 +70,9 @@ namespace NeuralNetwork
 
             Image image = new Bitmap(200, 100);
             Graphics itemgrfx = Graphics.FromImage(image);
-            Pen pen = new Pen(currentColor, 3.0f);
+            Pen pen = new Pen(currentColor, minWidth);
             itemgrfx.DrawLine(pen, 5, reletivePosition(DailyKMax, dailyKMin, imageHeight, max), 5, reletivePosition(DailyKMax, dailyKMin, imageHeight, min));
-            pen = new Pen(currentColor, 10.0f);
+            pen = new Pen(currentColor, maxWidth);
             itemgrfx.DrawLine(pen, 5, reletivePosition(DailyKMax, dailyKMin, imageHeight, open), 5, reletivePosition(DailyKMax, dailyKMin, imageHeight, close));
 
             Graphics grfx = pic_box1.CreateGraphics();

@@ -34,12 +34,13 @@
             this.btn_save = new System.Windows.Forms.Button();
             this.btn_legendretraining = new System.Windows.Forms.Button();
             this.pic_box1 = new System.Windows.Forms.PictureBox();
+            this.lbStocks = new System.Windows.Forms.ListBox();
             ((System.ComponentModel.ISupportInitialize)(this.pic_box1)).BeginInit();
             this.SuspendLayout();
             // 
             // btn_bptraining
             // 
-            this.btn_bptraining.Location = new System.Drawing.Point(567, 352);
+            this.btn_bptraining.Location = new System.Drawing.Point(774, 466);
             this.btn_bptraining.Name = "btn_bptraining";
             this.btn_bptraining.Size = new System.Drawing.Size(75, 23);
             this.btn_bptraining.TabIndex = 0;
@@ -49,7 +50,7 @@
             // 
             // btn_predict
             // 
-            this.btn_predict.Location = new System.Drawing.Point(470, 352);
+            this.btn_predict.Location = new System.Drawing.Point(693, 466);
             this.btn_predict.Name = "btn_predict";
             this.btn_predict.Size = new System.Drawing.Size(75, 23);
             this.btn_predict.TabIndex = 1;
@@ -59,7 +60,7 @@
             // 
             // btn_load
             // 
-            this.btn_load.Location = new System.Drawing.Point(371, 352);
+            this.btn_load.Location = new System.Drawing.Point(612, 466);
             this.btn_load.Name = "btn_load";
             this.btn_load.Size = new System.Drawing.Size(75, 23);
             this.btn_load.TabIndex = 2;
@@ -69,7 +70,7 @@
             // 
             // btn_save
             // 
-            this.btn_save.Location = new System.Drawing.Point(267, 352);
+            this.btn_save.Location = new System.Drawing.Point(531, 466);
             this.btn_save.Name = "btn_save";
             this.btn_save.Size = new System.Drawing.Size(75, 23);
             this.btn_save.TabIndex = 3;
@@ -79,7 +80,7 @@
             // 
             // btn_legendretraining
             // 
-            this.btn_legendretraining.Location = new System.Drawing.Point(470, 308);
+            this.btn_legendretraining.Location = new System.Drawing.Point(353, 466);
             this.btn_legendretraining.Name = "btn_legendretraining";
             this.btn_legendretraining.Size = new System.Drawing.Size(172, 23);
             this.btn_legendretraining.TabIndex = 4;
@@ -89,17 +90,28 @@
             // 
             // pic_box1
             // 
-            this.pic_box1.Location = new System.Drawing.Point(13, 13);
+            this.pic_box1.Location = new System.Drawing.Point(220, 12);
             this.pic_box1.Name = "pic_box1";
-            this.pic_box1.Size = new System.Drawing.Size(629, 289);
+            this.pic_box1.Size = new System.Drawing.Size(629, 448);
             this.pic_box1.TabIndex = 5;
             this.pic_box1.TabStop = false;
+            // 
+            // lbStocks
+            // 
+            this.lbStocks.FormattingEnabled = true;
+            this.lbStocks.ItemHeight = 12;
+            this.lbStocks.Location = new System.Drawing.Point(13, 13);
+            this.lbStocks.Name = "lbStocks";
+            this.lbStocks.Size = new System.Drawing.Size(201, 448);
+            this.lbStocks.TabIndex = 6;
+            this.lbStocks.MouseUp += new System.Windows.Forms.MouseEventHandler(this.lbStocks_MouseUp);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(654, 387);
+            this.ClientSize = new System.Drawing.Size(861, 501);
+            this.Controls.Add(this.lbStocks);
             this.Controls.Add(this.pic_box1);
             this.Controls.Add(this.btn_legendretraining);
             this.Controls.Add(this.btn_save);
@@ -108,6 +120,7 @@
             this.Controls.Add(this.btn_bptraining);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pic_box1)).EndInit();
             this.ResumeLayout(false);
 
@@ -121,6 +134,7 @@
         private System.Windows.Forms.Button btn_save;
         private System.Windows.Forms.Button btn_legendretraining;
         private System.Windows.Forms.PictureBox pic_box1;
+        private System.Windows.Forms.ListBox lbStocks;
     }
 }
 

@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
 using System.Threading;
+using System.IO;
 
 namespace NeuralNetwork
 {
@@ -157,7 +158,7 @@ namespace NeuralNetwork
         {
             double diff = max - min;
             double mid = min + (diff / 2.0);
-            coefficient = diff*10.0;
+            coefficient = diff * 10.0;
             offset = mid;
             normalize(coefficient, offset);
         }
@@ -200,7 +201,7 @@ namespace NeuralNetwork
             for (int i = 0; i < output.UpperBound; i++)
                 Console.Write(String.Format("{0} ", (output.item[i] * bpNetwork.coefficient + bpNetwork.offset).ToString("F")));
 
-            
+
         }
 
         private void btn_legendretraining_Click(object sender, EventArgs e)
@@ -216,6 +217,30 @@ namespace NeuralNetwork
             Thread thread = new Thread(new ThreadStart(training));
             //thread.Priority = ThreadPriority.Highest;
             thread.Start();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            List<String> tagListBoxStocks = new List<string>();
+            String StocksFile = System.Windows.Forms.Application.StartupPath + Path.DirectorySeparatorChar + "stocks.txt";
+            StreamReader sr = File.OpenText(StocksFile);
+            String str = "";
+            while ((str = sr.ReadLine()) != null)
+            {
+                string[] ss = str.Split('=');
+                ListViewItem item = new ListViewItem();
+                item.Text = ss[0] + "  " + ss[1];
+                item.Tag = ss[0];
+                int index = lbStocks.Items.Add(ss[0] + " " + ss[1]);
+                tagListBoxStocks.Add(ss[0]);
+            }
+            lbStocks.Tag = tagListBoxStocks;
+            sr.Close();
+        }
+
+        private void lbStocks_MouseUp(object sender, MouseEventArgs e)
+        {
+            //MessageBox.Show(((List<String> )lbStocks.Tag)[lbStocks.SelectedIndex]);
         }
     }
 }
