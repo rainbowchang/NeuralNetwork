@@ -43,7 +43,7 @@ namespace NeuralNetwork
         /*
          * BP神经网络的输入是天数*4、输出是天数*4 、隐含层的数量暂定400
          * 输入列分别开、高、低、收
-         * 输入数组stockdata的行号有低到高表示日期由近及遥远过去
+         * 输入数组stockdata的行号由低到高表示日期由近及遥远过去
          * 输入向量随序列增加4个一组逐渐往过去延伸
          * 训练向量（输出）随序号增加逐渐往未来延伸
          */
@@ -51,7 +51,7 @@ namespace NeuralNetwork
         {
             try
             {
-                loadData(@"E:\GitHub\NeuralNetwork\NeuralNetwork\bin\Debug\600036.csv");
+                loadData(@"G:\Code\VS.net\NeuralNetwork\NeuralNetwork\bin\Debug\600036.csv");
             }
             catch (Exception)
             {
@@ -175,13 +175,13 @@ namespace NeuralNetwork
 
         private void btn_save_Click(object sender, EventArgs e)
         {
-            bpNetwork.Save(@"E:\GitHub\NeuralNetwork\NeuralNetwork\bin\Debug\600036.data");
+            bpNetwork.Save(@"G:\Code\VS.net\NeuralNetwork\NeuralNetwork\bin\Debug\600036.data");
         }
 
         private void btn_load_Click(object sender, EventArgs e)
         {
-            bpNetwork.Load(@"E:\GitHub\NeuralNetwork\NeuralNetwork\bin\Debug\600036.data");
-            loadData(@"E:\GitHub\NeuralNetwork\NeuralNetwork\bin\Debug\600036.csv");
+            bpNetwork.Load(@"G:\Code\VS.net\NeuralNetwork\NeuralNetwork\bin\Debug\600036.data");
+            loadData(@"G:\Code\VS.net\NeuralNetwork\NeuralNetwork\bin\Debug\600036.csv");
             normalize(bpNetwork.coefficient, bpNetwork.offset);
         }
 
@@ -199,6 +199,8 @@ namespace NeuralNetwork
             Console.Write("Result = ");
             for (int i = 0; i < output.UpperBound; i++)
                 Console.Write(String.Format("{0} ", (output.item[i] * bpNetwork.coefficient + bpNetwork.offset).ToString("F")));
+
+            
         }
 
         private void btn_legendretraining_Click(object sender, EventArgs e)

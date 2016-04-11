@@ -33,11 +33,13 @@
             this.btn_load = new System.Windows.Forms.Button();
             this.btn_save = new System.Windows.Forms.Button();
             this.btn_legendretraining = new System.Windows.Forms.Button();
+            this.pic_box1 = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.pic_box1)).BeginInit();
             this.SuspendLayout();
             // 
             // btn_bptraining
             // 
-            this.btn_bptraining.Location = new System.Drawing.Point(567, 284);
+            this.btn_bptraining.Location = new System.Drawing.Point(567, 352);
             this.btn_bptraining.Name = "btn_bptraining";
             this.btn_bptraining.Size = new System.Drawing.Size(75, 23);
             this.btn_bptraining.TabIndex = 0;
@@ -47,7 +49,7 @@
             // 
             // btn_predict
             // 
-            this.btn_predict.Location = new System.Drawing.Point(470, 284);
+            this.btn_predict.Location = new System.Drawing.Point(470, 352);
             this.btn_predict.Name = "btn_predict";
             this.btn_predict.Size = new System.Drawing.Size(75, 23);
             this.btn_predict.TabIndex = 1;
@@ -57,7 +59,7 @@
             // 
             // btn_load
             // 
-            this.btn_load.Location = new System.Drawing.Point(371, 284);
+            this.btn_load.Location = new System.Drawing.Point(371, 352);
             this.btn_load.Name = "btn_load";
             this.btn_load.Size = new System.Drawing.Size(75, 23);
             this.btn_load.TabIndex = 2;
@@ -67,7 +69,7 @@
             // 
             // btn_save
             // 
-            this.btn_save.Location = new System.Drawing.Point(267, 284);
+            this.btn_save.Location = new System.Drawing.Point(267, 352);
             this.btn_save.Name = "btn_save";
             this.btn_save.Size = new System.Drawing.Size(75, 23);
             this.btn_save.TabIndex = 3;
@@ -77,7 +79,7 @@
             // 
             // btn_legendretraining
             // 
-            this.btn_legendretraining.Location = new System.Drawing.Point(470, 240);
+            this.btn_legendretraining.Location = new System.Drawing.Point(470, 308);
             this.btn_legendretraining.Name = "btn_legendretraining";
             this.btn_legendretraining.Size = new System.Drawing.Size(172, 23);
             this.btn_legendretraining.TabIndex = 4;
@@ -85,11 +87,20 @@
             this.btn_legendretraining.UseVisualStyleBackColor = true;
             this.btn_legendretraining.Click += new System.EventHandler(this.btn_legendretraining_Click);
             // 
+            // pic_box1
+            // 
+            this.pic_box1.Location = new System.Drawing.Point(13, 13);
+            this.pic_box1.Name = "pic_box1";
+            this.pic_box1.Size = new System.Drawing.Size(629, 289);
+            this.pic_box1.TabIndex = 5;
+            this.pic_box1.TabStop = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(654, 319);
+            this.ClientSize = new System.Drawing.Size(654, 387);
+            this.Controls.Add(this.pic_box1);
             this.Controls.Add(this.btn_legendretraining);
             this.Controls.Add(this.btn_save);
             this.Controls.Add(this.btn_load);
@@ -97,6 +108,7 @@
             this.Controls.Add(this.btn_bptraining);
             this.Name = "Form1";
             this.Text = "Form1";
+            ((System.ComponentModel.ISupportInitialize)(this.pic_box1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -108,6 +120,7 @@
         private System.Windows.Forms.Button btn_load;
         private System.Windows.Forms.Button btn_save;
         private System.Windows.Forms.Button btn_legendretraining;
+        private System.Windows.Forms.PictureBox pic_box1;
     }
 }
 
