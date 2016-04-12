@@ -36,6 +36,8 @@ namespace NeuralNetwork
             }
             lbStocks.Tag = tagListBoxStocks;
             sr.Close();
+
+            bpNetwork = new BP(input_days * 4, hidden_layor_count, output_days * 4);
         }
 
         private void btn_training_Click(object sender, EventArgs e)
@@ -46,7 +48,7 @@ namespace NeuralNetwork
             hidden_layor_count = 400;
             input = new Vector(input_days * 4);
             Template = new Vector(output_days * 4);
-            bpNetwork = new BP(input_days * 4, hidden_layor_count, output_days * 4);
+            //bpNetwork = new BP(input_days * 4, hidden_layor_count, output_days * 4);
 
             Thread thread = new Thread(new ThreadStart(training));
             //thread.Priority = ThreadPriority.Highest;
@@ -132,6 +134,7 @@ namespace NeuralNetwork
 
         private void btn_predict_Click(object sender, EventArgs e)
         {
+            input = new Vector(input_days * 4);
             for (int j = 0; j < input_days; j++)
             {
                 input.item[j * 4 + 0] = stockData[j, 0];
@@ -145,7 +148,24 @@ namespace NeuralNetwork
             for (int i = 0; i < output.UpperBound; i++)
                 Console.Write(String.Format("{0} ", (output.item[i] * bpNetwork.coefficient + bpNetwork.offset).ToString("F")));
 
-            drawDailyK
+            double[] sample = new double[40];
+            for (int i = 0; i < 7; i++)
+            {
+                sample[i * 4 + 0] = stockData[6 - i, 0];
+                sample[i * 4 + 1] = stockData[6 - i, 1];
+                sample[i * 4 + 2] = stockData[6 - i, 2];
+                sample[i * 4 + 3] = stockData[6 - i, 3];
+            }
+            for (int i = 7; i < 10; i++)
+            {
+                sample[i * 4 + 0] = output.item[(i - 7) * 4 + 0];
+                sample[i * 4 + 1] = output.item[(i - 7) * 4 + 1];
+                sample[i * 4 + 2] = output.item[(i - 7) * 4 + 2];
+                sample[i * 4 + 3] = output.item[(i - 7) * 4 + 3];
+            }
+
+
+            drawDailyK(sample);
         }
 
         private void btn_legendretraining_Click(object sender, EventArgs e)

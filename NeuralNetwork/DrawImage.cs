@@ -26,13 +26,15 @@ namespace NeuralNetwork
             }
             setMaxMin(data);
             Graphics grfx = Graphics.FromImage(DailyKBackgroundImange);
-            grfx.Clear(Color.DarkGray);
+            grfx.Clear(Color.Black);
+            Graphics grfx1 = pic_box1.CreateGraphics();
+            grfx1.DrawImage(DailyKBackgroundImange, pic_box1.ClientRectangle);
             int d = data.Length / 4;
             widthPerDay = imageWidth / (d * 1.0f);
             Boolean predictFlag = false;
             for (int i = 0; i < d; i++)
             {
-                if (i + 3 >= d)
+                if (i + output_days >= d)
                     predictFlag = true;
                 else
                     predictFlag = false;
