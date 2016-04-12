@@ -14,84 +14,28 @@ namespace NeuralNetwork
 {
     public partial class Form1 : Form
     {
-        int input_days = 200;
-        int output_days = 3;
-        int training_length = 300;//训练的样本数
-        int hidden_layor_count = 400;
-        double coefficient;
-        double offset;
-        double max = 0, min = 0;
-
-        /// <summary>
-        /// 输入向量
-        /// </summary>
-        Vector input;// = new Vector(input_days * 4);
-
-        /// <summary>
-        /// 学习向量
-        /// </summary>
-        Vector Template;// = new Vector(output_days * 4);
-        NeuralMatrix bpNetwork;// = new BP(input_days * 4, hidden_layor_count, output_days * 4);
-
-        const int UpboundRow = 900;
-        double[,] stockData = new double[UpboundRow, 4];
-
         public Form1()
         {
             InitializeComponent();
         }
 
-        /*
-         * BP神经网络的输入是天数*4、输出是天数*4 、隐含层的数量暂定400
-         * 输入列分别开、高、低、收
-         * 输入数组stockdata的行号由低到高表示日期由近及遥远过去
-         * 输入向量随序列增加4个一组逐渐往过去延伸
-         * 训练向量（输出）随序号增加逐渐往未来延伸
-         */
-        private void training()
+        private void Form1_Load(object sender, EventArgs e)
         {
-            try
+            List<String> tagListBoxStocks = new List<string>();
+            String StocksFile = System.Windows.Forms.Application.StartupPath + Path.DirectorySeparatorChar + "stocks.txt";
+            StreamReader sr = File.OpenText(StocksFile);
+            String str = "";
+            while ((str = sr.ReadLine()) != null)
             {
-                loadData(@"G:\Code\VS.net\NeuralNetwork\NeuralNetwork\bin\Debug\600036.csv");
+                string[] ss = str.Split('=');
+                ListViewItem item = new ListViewItem();
+                item.Text = ss[0] + "  " + ss[1];
+                item.Tag = ss[0];
+                int index = lbStocks.Items.Add(ss[0] + " " + ss[1]);
+                tagListBoxStocks.Add(ss[0]);
             }
-            catch (Exception)
-            {
-                return;
-            }
-            normalize();
-            bpNetwork.coefficient = coefficient;
-            bpNetwork.offset = offset;
-            for (int n = 0; n <= 12; n++)  //n是循环次数
-                for (int i = training_length; i >= output_days; i--)
-                {
-                    for (int j = 0; j < input_days; j++)
-                    {
-                        input.item[j * 4 + 0] = stockData[i + j, 0];
-                        input.item[j * 4 + 1] = stockData[i + j, 1];
-                        input.item[j * 4 + 2] = stockData[i + j, 2];
-                        input.item[j * 4 + 3] = stockData[i + j, 3];
-                    }
-                    for (int d = 0; d < output_days; d++)
-                    {
-                        Template.item[d * 4 + 0] = stockData[i - d - 1, 0];
-                        Template.item[d * 4 + 1] = stockData[i - d - 1, 1];
-                        Template.item[d * 4 + 2] = stockData[i - d - 1, 2];
-                        Template.item[d * 4 + 3] = stockData[i - d - 1, 3];
-                    }
-
-                    Console.WriteLine(String.Format("N = {0}, I = {1}", n, i));
-                    try
-                    {
-                        bpNetwork.Training(input, Template, 5);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                        return;
-                    }
-                }
-            Console.WriteLine("Training finish.");
-            Console.ReadLine();
+            lbStocks.Tag = tagListBoxStocks;
+            sr.Close();
         }
 
         private void btn_training_Click(object sender, EventArgs e)
@@ -176,13 +120,13 @@ namespace NeuralNetwork
 
         private void btn_save_Click(object sender, EventArgs e)
         {
-            bpNetwork.Save(@"G:\Code\VS.net\NeuralNetwork\NeuralNetwork\bin\Debug\600036.data");
+            bpNetwork.Save(System.Windows.Forms.Application.StartupPath + Path.DirectorySeparatorChar + "600036.data");
         }
 
         private void btn_load_Click(object sender, EventArgs e)
         {
-            bpNetwork.Load(@"G:\Code\VS.net\NeuralNetwork\NeuralNetwork\bin\Debug\600036.data");
-            loadData(@"G:\Code\VS.net\NeuralNetwork\NeuralNetwork\bin\Debug\600036.csv");
+            bpNetwork.Load(System.Windows.Forms.Application.StartupPath + Path.DirectorySeparatorChar + "600036.data");
+            loadData(System.Windows.Forms.Application.StartupPath + Path.DirectorySeparatorChar + "600036.csv");
             normalize(bpNetwork.coefficient, bpNetwork.offset);
         }
 
@@ -201,7 +145,7 @@ namespace NeuralNetwork
             for (int i = 0; i < output.UpperBound; i++)
                 Console.Write(String.Format("{0} ", (output.item[i] * bpNetwork.coefficient + bpNetwork.offset).ToString("F")));
 
-
+            drawDailyK
         }
 
         private void btn_legendretraining_Click(object sender, EventArgs e)
@@ -219,24 +163,6 @@ namespace NeuralNetwork
             thread.Start();
         }
 
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            List<String> tagListBoxStocks = new List<string>();
-            String StocksFile = System.Windows.Forms.Application.StartupPath + Path.DirectorySeparatorChar + "stocks.txt";
-            StreamReader sr = File.OpenText(StocksFile);
-            String str = "";
-            while ((str = sr.ReadLine()) != null)
-            {
-                string[] ss = str.Split('=');
-                ListViewItem item = new ListViewItem();
-                item.Text = ss[0] + "  " + ss[1];
-                item.Tag = ss[0];
-                int index = lbStocks.Items.Add(ss[0] + " " + ss[1]);
-                tagListBoxStocks.Add(ss[0]);
-            }
-            lbStocks.Tag = tagListBoxStocks;
-            sr.Close();
-        }
 
         private void lbStocks_MouseUp(object sender, MouseEventArgs e)
         {

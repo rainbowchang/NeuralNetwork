@@ -65,6 +65,9 @@
     <Compile Include="LegendreMatrix.cs" />
     <Compile Include="Matrix.cs" />
     <Compile Include="NeuralMatrix.cs" />
+    <Compile Include="NeuralOperator.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Neuron.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
