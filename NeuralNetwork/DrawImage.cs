@@ -9,8 +9,8 @@ namespace NeuralNetwork
         private const int imageHeight = 200;
         private const int imageWidth = 500;
         private Image DailyKBackgroundImange = new Bitmap(imageWidth, imageHeight);
-        private double DailyKMax = 1.0;//K线中的最大数据
-        private double dailyKMin = 0.0;//K线中的最小数据
+        private double DailyKMax = 0.0;//K线中的最大数据
+        private double dailyKMin = 1.0;//K线中的最小数据
         private float widthPerDay = 1.0f;//每K线所需要占用的画面宽度
         private float heightPerDay = imageHeight;//
         
