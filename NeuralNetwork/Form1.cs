@@ -14,9 +14,12 @@ namespace NeuralNetwork
 {
     public partial class Form1 : Form
     {
+        Job job;
         public Form1()
         {
             InitializeComponent();
+            action = opserateProcessBar;
+            //job = new Job(this);
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -187,6 +190,13 @@ namespace NeuralNetwork
         private void lbStocks_MouseUp(object sender, MouseEventArgs e)
         {
             //MessageBox.Show(((List<String> )lbStocks.Tag)[lbStocks.SelectedIndex]);
+        }
+
+        public delegate void MyDelegate(float f);
+        public MyDelegate action;
+        private void opserateProcessBar(float f)
+        {
+            
         }
     }
 }

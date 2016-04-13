@@ -35,6 +35,7 @@
             this.btn_legendretraining = new System.Windows.Forms.Button();
             this.pic_box1 = new System.Windows.Forms.PictureBox();
             this.lbStocks = new System.Windows.Forms.ListBox();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             ((System.ComponentModel.ISupportInitialize)(this.pic_box1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -106,11 +107,19 @@
             this.lbStocks.TabIndex = 6;
             this.lbStocks.MouseUp += new System.Windows.Forms.MouseEventHandler(this.lbStocks_MouseUp);
             // 
+            // progressBar1
+            // 
+            this.progressBar1.Location = new System.Drawing.Point(12, 467);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(335, 23);
+            this.progressBar1.TabIndex = 7;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(861, 501);
+            this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.lbStocks);
             this.Controls.Add(this.pic_box1);
             this.Controls.Add(this.btn_legendretraining);
@@ -135,6 +144,7 @@
         private System.Windows.Forms.Button btn_legendretraining;
         private System.Windows.Forms.PictureBox pic_box1;
         private System.Windows.Forms.ListBox lbStocks;
+        private System.Windows.Forms.ProgressBar progressBar1;
     }
 }
 
