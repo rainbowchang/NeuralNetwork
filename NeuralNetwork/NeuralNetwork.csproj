@@ -53,6 +53,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BP.cs" />
+    <Compile Include="DataFileOperator.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="DrawImage.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -15,11 +15,12 @@ namespace NeuralNetwork
     public partial class Form1 : Form
     {
         Job job;
+        Dictionary<string, Object> stockDictionary;
         public Form1()
         {
             InitializeComponent();
             action = opserateProcessBar;
-            //job = new Job(this);
+            stockDictionary = new Dictionary<string, Object>();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -39,17 +40,23 @@ namespace NeuralNetwork
             }
             lbStocks.Tag = tagListBoxStocks;
             sr.Close();
-
+            //loadDataFile();
             bpNetwork = new BP(input_days * 4, hidden_layor_count, output_days * 4);
+            initial();
+        }
+
+        protected void initial()
+        {
+
         }
 
         private void btn_training_Click(object sender, EventArgs e)
         {
-            input_days = 200;
-            output_days = 3;
-            training_length = 300;//训练的样本数
-            hidden_layor_count = 400;
-            input = new Vector(input_days * 4);
+            //input_days = 200;
+            //output_days = 3;
+            //training_length = 300;//训练的样本数
+            //hidden_layor_count = 400;
+
             Template = new Vector(output_days * 4);
             //bpNetwork = new BP(input_days * 4, hidden_layor_count, output_days * 4);
 
@@ -58,114 +65,49 @@ namespace NeuralNetwork
             thread.Start();
         }
 
-        private void loadData(string path)
-        {
-            Excel._Application excel = null;
-            try
-            {
-                excel = new Excel.Application();
-                excel.Visible = false;
-                Excel.Workbooks workbooks = excel.Workbooks;
-                Excel.Workbook workbook = workbooks.Open(path);
-                Excel.Worksheet worksheet = workbook.Worksheets[1];
-                int tableRowNo = 0;
-                for (int i = 2; i < 1000; i++)
-                {
-                    if (excel.Cells[i, 6].Value > 0.00001)
-                    {
-                        stockData[tableRowNo, 0] = excel.Cells[i, 2].Value;
-                        if (max < stockData[tableRowNo, 0]) max = stockData[tableRowNo, 0];
-                        if (min > stockData[tableRowNo, 0]) min = stockData[tableRowNo, 0];
-                        stockData[tableRowNo, 1] = excel.Cells[i, 3].Value;
-                        if (max < stockData[tableRowNo, 1]) max = stockData[tableRowNo, 1];
-                        if (min > stockData[tableRowNo, 1]) min = stockData[tableRowNo, 1];
-                        stockData[tableRowNo, 2] = excel.Cells[i, 4].Value;
-                        if (max < stockData[tableRowNo, 2]) max = stockData[tableRowNo, 2];
-                        if (min > stockData[tableRowNo, 2]) min = stockData[tableRowNo, 2];
-                        stockData[tableRowNo, 3] = excel.Cells[i, 5].Value;
-                        if (max < stockData[tableRowNo, 3]) max = stockData[tableRowNo, 3];
-                        if (min > stockData[tableRowNo, 3]) min = stockData[tableRowNo, 3];
-                        tableRowNo++;
-                    }
-                    if (tableRowNo >= UpboundRow)
-                        break;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                Console.ReadLine();
-                throw ex;
-            }
-            finally
-            {
-                excel.Quit();
-            }
-        }
-
-        private void normalize()
-        {
-            double diff = max - min;
-            double mid = min + (diff / 2.0);
-            coefficient = diff * 10.0;
-            offset = mid;
-            normalize(coefficient, offset);
-        }
-
-        private void normalize(double coefficient, double offset)
-        {
-            for (int r = 0; r < UpboundRow; r++)
-            {
-                stockData[r, 0] = (stockData[r, 0] - offset) / coefficient;
-                stockData[r, 1] = (stockData[r, 1] - offset) / coefficient;
-                stockData[r, 2] = (stockData[r, 2] - offset) / coefficient;
-                stockData[r, 3] = (stockData[r, 3] - offset) / coefficient;
-            }
-        }
-
         private void btn_save_Click(object sender, EventArgs e)
         {
-            bpNetwork.Save(System.Windows.Forms.Application.StartupPath + Path.DirectorySeparatorChar + "600036.data");
+ //           bpNetwork.Save(System.Windows.Forms.Application.StartupPath + Path.DirectorySeparatorChar + "600036.data");
         }
 
         private void btn_load_Click(object sender, EventArgs e)
         {
-            bpNetwork.Load(System.Windows.Forms.Application.StartupPath + Path.DirectorySeparatorChar + "600036.data");
-            loadData(System.Windows.Forms.Application.StartupPath + Path.DirectorySeparatorChar + "600036.csv");
-            normalize(bpNetwork.coefficient, bpNetwork.offset);
+            //bpNetwork.Load(System.Windows.Forms.Application.StartupPath + Path.DirectorySeparatorChar + "600036.data");
+            //loadData(System.Windows.Forms.Application.StartupPath + Path.DirectorySeparatorChar + "600036.csv");
+            //normalize(bpNetwork.coefficient, bpNetwork.offset);
         }
 
         private void btn_predict_Click(object sender, EventArgs e)
         {
-            input = new Vector(input_days * 4);
-            for (int j = 0; j < input_days; j++)
-            {
-                input.item[j * 4 + 0] = stockData[j, 0];
-                input.item[j * 4 + 1] = stockData[j, 1];
-                input.item[j * 4 + 2] = stockData[j, 2];
-                input.item[j * 4 + 3] = stockData[j, 3];
-            }
+            //input = new Vector(input_days * 4);
+            //for (int j = 0; j < input_days; j++)
+            //{
+            //    input.item[j * 4 + 0] = stockData[j, 0];
+            //    input.item[j * 4 + 1] = stockData[j, 1];
+            //    input.item[j * 4 + 2] = stockData[j, 2];
+            //    input.item[j * 4 + 3] = stockData[j, 3];
+            //}
 
-            Vector output = bpNetwork.Calculate(input);
-            Console.Write("Result = ");
-            for (int i = 0; i < output.UpperBound; i++)
-                Console.Write(String.Format("{0} ", (output.item[i] * bpNetwork.coefficient + bpNetwork.offset).ToString("F")));
+            //Vector output = bpNetwork.Calculate(input);
+            //Console.Write("Result = ");
+            //for (int i = 0; i < output.UpperBound; i++)
+            //    Console.Write(String.Format("{0} ", (output.item[i] * bpNetwork.coefficient + bpNetwork.offset).ToString("F")));
 
-            double[] sample = new double[40];
-            for (int i = 0; i < 7; i++)
-            {
-                sample[i * 4 + 0] = stockData[6 - i, 0];
-                sample[i * 4 + 1] = stockData[6 - i, 1];
-                sample[i * 4 + 2] = stockData[6 - i, 2];
-                sample[i * 4 + 3] = stockData[6 - i, 3];
-            }
-            for (int i = 7; i < 10; i++)
-            {
-                sample[i * 4 + 0] = output.item[(i - 7) * 4 + 0];
-                sample[i * 4 + 1] = output.item[(i - 7) * 4 + 1];
-                sample[i * 4 + 2] = output.item[(i - 7) * 4 + 2];
-                sample[i * 4 + 3] = output.item[(i - 7) * 4 + 3];
-            }
+            //double[] sample = new double[40];
+            //for (int i = 0; i < 7; i++)
+            //{
+            //    sample[i * 4 + 0] = stockData[6 - i, 0];
+            //    sample[i * 4 + 1] = stockData[6 - i, 1];
+            //    sample[i * 4 + 2] = stockData[6 - i, 2];
+            //    sample[i * 4 + 3] = stockData[6 - i, 3];
+            //}
+            //for (int i = 7; i < 10; i++)
+            //{
+            //    sample[i * 4 + 0] = output.item[(i - 7) * 4 + 0];
+            //    sample[i * 4 + 1] = output.item[(i - 7) * 4 + 1];
+            //    sample[i * 4 + 2] = output.item[(i - 7) * 4 + 2];
+            //    sample[i * 4 + 3] = output.item[(i - 7) * 4 + 3];
+            //}
 
 
             drawDailyK(sample);
@@ -173,17 +115,17 @@ namespace NeuralNetwork
 
         private void btn_legendretraining_Click(object sender, EventArgs e)
         {
-            input_days = 150;
-            output_days = 2;
-            training_length = 100;//训练的样本数
-            hidden_layor_count = 25;
-            input = new Vector(input_days * 4);
-            Template = new Vector(output_days * 4);
-            bpNetwork = new LegendreMatrix(input_days * 4, hidden_layor_count, output_days * 4);
+            //input_days = 150;
+            //output_days = 2;
+            //training_length = 100;//训练的样本数
+            //hidden_layor_count = 25;
+            //input = new Vector(input_days * 4);
+            //Template = new Vector(output_days * 4);
+            //bpNetwork = new LegendreMatrix(input_days * 4, hidden_layor_count, output_days * 4);
 
-            Thread thread = new Thread(new ThreadStart(training));
-            //thread.Priority = ThreadPriority.Highest;
-            thread.Start();
+            //Thread thread = new Thread(new ThreadStart(training));
+            ////thread.Priority = ThreadPriority.Highest;
+            //thread.Start();
         }
 
 

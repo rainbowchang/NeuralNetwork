@@ -8,14 +8,7 @@ namespace NeuralNetwork
         int output_days = 3;
         int training_length = 300;//训练的样本数
         int hidden_layor_count = 400;
-        double coefficient;
-        double offset;
-        double max = 0, min = 0;
 
-        /// <summary>
-        /// 输入向量
-        /// </summary>
-        Vector input;// = new Vector(input_days * 4);
 
         /// <summary>
         /// 学习向量

@@ -6,7 +6,7 @@ using System.IO;
 
 namespace NeuralNetwork
 {
-    interface INeuralMatrix
+    public interface INeuralMatrix
     {
         void Load(String Filename);
         void Save(String Filename);
