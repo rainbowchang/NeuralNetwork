@@ -1,24 +1,150 @@
 ﻿using System;
 using System.IO;
+using Excel = Microsoft.Office.Interop.Excel;
 namespace NeuralNetwork
 {
-    public partial class Form1
-    {
-        int input_days = 200;
-        int output_days = 3;
-        int training_length = 300;//训练的样本数
-        int hidden_layor_count = 400;
 
+    public class StockState
+    {
+        public String code;
+        public INeuralMatrix neuralMatrix;
+        public double[,] historyData;
+        public double[,] historyDataNormalize;
+        public double[] predictData;
+        public double[] predictDataNormalize;
+        /// <summary>
+        /// 输入向量
+        /// </summary>
+        Vector input;
+        double max = 0, min = 0;
+        double coefficient;
+        double offset;
+        Vector Template;
+
+        public StockState(String code)
+        {
+            this.code = code;
+            historyData = new double[Constants.UpboundRow, 4];
+            historyDataNormalize = new double[Constants.UpboundRow, 4];
+            predictData = new double[Constants.Output_Days * 4];
+            predictDataNormalize = new double[Constants.Output_Days * 4];
+        }
+
+        public void initial()
+        {
+            input = new Vector(Constants.Input_Days * 4);
+            Template = new Vector(Constants.Output_Days * 4);
+        }
+
+        private void normalize()
+        {
+            double diff = max - min;
+            double mid = min + (diff / 2.0);
+            coefficient = diff * 10.0;
+            offset = mid;
+            normalize(coefficient, offset);
+        }
+
+        private void normalize(double coefficient, double offset)
+        {
+            for (int r = 0; r < Constants.UpboundRow; r++)
+            {
+                historyDataNormalize[r, 0] = (historyData[r, 0] - offset) / coefficient;
+                historyDataNormalize[r, 1] = (historyData[r, 1] - offset) / coefficient;
+                historyDataNormalize[r, 2] = (historyData[r, 2] - offset) / coefficient;
+                historyDataNormalize[r, 3] = (historyData[r, 3] - offset) / coefficient;
+            }
+        }
 
         /// <summary>
-        /// 学习向量
+        /// 从excel文件加载历史数据
         /// </summary>
-        Vector Template;// = new Vector(output_days * 4);
-        NeuralMatrix bpNetwork;// = new BP(input_days * 4, hidden_layor_count, output_days * 4);
+        /// <param name="path"></param>
+        public void loadData(string path)
+        {
+            Excel._Application excel = null;
+            try
+            {
+                excel = new Excel.Application();
+                excel.Visible = false;
+                Excel.Workbooks workbooks = excel.Workbooks;
+                Excel.Workbook workbook = workbooks.Open(path);
+                Excel.Worksheet worksheet = workbook.Worksheets[1];
+                int tableRowNo = 0;
+                max = min = excel.Cells[2, 2].Value;//初始化！！！！！！
+                for (int i = 2; i < 1000; i++)
+                {
+                    if (excel.Cells[i, 6].Value > 0.00001)
+                    {
+                        historyData[tableRowNo, 0] = excel.Cells[i, 2].Value;
+                        if (max < historyData[tableRowNo, 0]) max = historyData[tableRowNo, 0];
+                        if (min > historyData[tableRowNo, 0]) min = historyData[tableRowNo, 0];
+                        historyData[tableRowNo, 1] = excel.Cells[i, 3].Value;
+                        if (max < historyData[tableRowNo, 1]) max = historyData[tableRowNo, 1];
+                        if (min > historyData[tableRowNo, 1]) min = historyData[tableRowNo, 1];
+                        historyData[tableRowNo, 2] = excel.Cells[i, 4].Value;
+                        if (max < historyData[tableRowNo, 2]) max = historyData[tableRowNo, 2];
+                        if (min > historyData[tableRowNo, 2]) min = historyData[tableRowNo, 2];
+                        historyData[tableRowNo, 3] = excel.Cells[i, 5].Value;
+                        if (max < historyData[tableRowNo, 3]) max = historyData[tableRowNo, 3];
+                        if (min > historyData[tableRowNo, 3]) min = historyData[tableRowNo, 3];
+                        tableRowNo++;
+                    }
+                    if (tableRowNo >= Constants.UpboundRow)
+                        break;
+                }
 
-        const int UpboundRow = 900;
-        double[,] stockData = new double[UpboundRow, 4];
+                normalize();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.ReadLine();
+                throw ex;
+            }
+            finally
+            {
+                excel.Quit();
+            }
+        }
 
+        public void save(String filename)
+        {
+            neuralMatrix.Save(filename);
+        }
+
+        public void predict()
+        {
+            input = new Vector(Constants.Input_Days * 4);
+            for (int j = 0; j < Constants.Input_Days; j++)
+            {
+                input.item[j * 4 + 0] = historyData[j, 0];
+                input.item[j * 4 + 1] = historyData[j, 1];
+                input.item[j * 4 + 2] = historyData[j, 2];
+                input.item[j * 4 + 3] = historyData[j, 3];
+            }
+
+            Vector output = neuralMatrix.Calculate(input);
+            Console.Write("Result = ");
+            for (int i = 0; i < output.UpperBound; i++)
+                Console.Write(String.Format("{0} ", (output.item[i] * coefficient + offset).ToString("F")));
+
+            double[] sample = new double[40];
+            for (int i = 0; i < 7; i++)
+            {
+                sample[i * 4 + 0] = historyData[6 - i, 0];
+                sample[i * 4 + 1] = historyData[6 - i, 1];
+                sample[i * 4 + 2] = historyData[6 - i, 2];
+                sample[i * 4 + 3] = historyData[6 - i, 3];
+            }
+            for (int i = 7; i < 10; i++)
+            {
+                sample[i * 4 + 0] = output.item[(i - 7) * 4 + 0];
+                sample[i * 4 + 1] = output.item[(i - 7) * 4 + 1];
+                sample[i * 4 + 2] = output.item[(i - 7) * 4 + 2];
+                sample[i * 4 + 3] = output.item[(i - 7) * 4 + 3];
+            }
+        }
 
         /*
          * BP神经网络的输入是天数*4、输出是天数*4 、隐含层的数量暂定400
@@ -26,42 +152,31 @@ namespace NeuralNetwork
          * 输入数组stockdata的行号由低到高表示日期由近及遥远过去
          * 输入向量随序列增加4个一组逐渐往过去延伸
          * 训练向量（输出）随序号增加逐渐往未来延伸
-         */
-        private void training()
+        */
+        public void training()
         {
-            try
-            {
-                loadData(System.Windows.Forms.Application.StartupPath + Path.DirectorySeparatorChar + "600036.csv");
-            }
-            catch (Exception)
-            {
-                return;
-            }
-            normalize();
-            bpNetwork.coefficient = coefficient;
-            bpNetwork.offset = offset;
             for (int n = 0; n <= 12; n++)  //n是循环次数
-                for (int i = training_length; i >= output_days; i--)
+                for (int i = Constants.Training_Length; i >= Constants.Output_Days; i--)
                 {
-                    for (int j = 0; j < input_days; j++)
+                    for (int j = 0; j < Constants.Input_Days; j++)
                     {
-                        input.item[j * 4 + 0] = stockData[i + j, 0];
-                        input.item[j * 4 + 1] = stockData[i + j, 1];
-                        input.item[j * 4 + 2] = stockData[i + j, 2];
-                        input.item[j * 4 + 3] = stockData[i + j, 3];
+                        input.item[j * 4 + 0] = historyDataNormalize[i + j, 0];
+                        input.item[j * 4 + 1] = historyDataNormalize[i + j, 1];
+                        input.item[j * 4 + 2] = historyDataNormalize[i + j, 2];
+                        input.item[j * 4 + 3] = historyDataNormalize[i + j, 3];
                     }
-                    for (int d = 0; d < output_days; d++)
+                    for (int d = 0; d < Constants.Output_Days; d++)
                     {
-                        Template.item[d * 4 + 0] = stockData[i - d - 1, 0];
-                        Template.item[d * 4 + 1] = stockData[i - d - 1, 1];
-                        Template.item[d * 4 + 2] = stockData[i - d - 1, 2];
-                        Template.item[d * 4 + 3] = stockData[i - d - 1, 3];
+                        Template.item[d * 4 + 0] = historyDataNormalize[i - d - 1, 0];
+                        Template.item[d * 4 + 1] = historyDataNormalize[i - d - 1, 1];
+                        Template.item[d * 4 + 2] = historyDataNormalize[i - d - 1, 2];
+                        Template.item[d * 4 + 3] = historyDataNormalize[i - d - 1, 3];
                     }
 
                     Console.WriteLine(String.Format("N = {0}, I = {1}", n, i));
                     try
                     {
-                        bpNetwork.Training(input, Template, 5);
+                        neuralMatrix.Training(input, Template, 5);
                     }
                     catch (Exception ex)
                     {
@@ -72,7 +187,5 @@ namespace NeuralNetwork
             Console.WriteLine("Training finish.");
             Console.ReadLine();
         }
-
     }
-
 }

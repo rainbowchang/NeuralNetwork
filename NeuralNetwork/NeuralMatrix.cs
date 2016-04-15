@@ -16,7 +16,6 @@ namespace NeuralNetwork
 
     public abstract class NeuralMatrix : INeuralMatrix
     {
-
         public abstract void Load(String Filename);
         public abstract void Save(String Filename);
         public abstract Vector Calculate(Vector vectorInput);

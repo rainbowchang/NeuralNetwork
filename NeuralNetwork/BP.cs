@@ -9,15 +9,12 @@ namespace NeuralNetwork
 
     class BP : NeuralMatrix
     {
-        //INeuron Function1 = new Logsig();
-        //INeuron Function2 = new Pureline();
-
         /// <summary>
         /// 私有构造函数，适合于从文件读取连接系数的时候从Load函数内部调用。
         /// </summary>
         private BP()
         {
-            Miu = 0.05;
+            Miu = Constants.Miu;
             Delta = 0.0;
         }
         /// <summary>
@@ -47,10 +44,9 @@ namespace NeuralNetwork
             Input_Hiddene_Coefficient_Matrix = new Matrix(Hidden_Layer_Count, Input_Layer_Count);
             Hidden_Output_Coefficient_Matrix = new Matrix(Output_Layer_Count, Hidden_Layer_Count);
             Input_Hidden_Coefficient_Change_Matrix = new Matrix(Hidden_Layer_Count, Input_Layer_Count);
-            //Input_Hidden_Coefficient_Delta_Matrix = new Matrix(Hidden_Layer_Count, Input_Layer_Count);
             Hidden_Output_Coefficient_Change_Matrix = new Matrix(Output_Layer_Count, Hidden_Layer_Count);
             Hidden_Output_Coefficient_Delta_Matrix = new Matrix(Output_Layer_Count, Hidden_Layer_Count);
-            Miu = 0.1;
+            Miu = Constants.Miu;
             Delta = 0.0;
 
             InitialMatrix();
@@ -132,7 +128,7 @@ namespace NeuralNetwork
                 Calculate();
                 Console.WriteLine("Calculate finish: " + DateTime.Now.ToString());
                 CalculateError();
-                if (Delta > 1000000.0)
+                if (Delta > Constants.MaxError)
                     throw new Exception("So much error, stop training.");
                 CalculateDelta_Hidden_Output_Coefficient();
                 CalculateDelta_Input_Hidden_Coefficient();
@@ -143,7 +139,7 @@ namespace NeuralNetwork
                 Hidden_Offset_Vector.add(Hidden_Offset_Chang_Vector);
                 Output_Offset_Vector.add(Output_Offset_Change_Vector);
                 Console.WriteLine("Vector adjust finish: " + DateTime.Now.ToString());
-                if (Delta < 0.00000001)
+                if (Delta < Constants.MinError)
                     break;
             }
         }
@@ -202,7 +198,6 @@ namespace NeuralNetwork
                 delta *= FirstNeuronVector[i].NeuronFunctionDerivative(Hidden_Layer_Vector.item[i]);
                 for (int j = 0; j < Input_Layer_Count; j++)
                 {
-                    //Input_Hidden_Coefficient_Delta_Matrix.item[i, j] = delta;
                     Input_Hidden_Coefficient_Change_Matrix.item[i, j] = Miu * delta * Input_Layer_Vector.item[j];
                 }
                 Hidden_Offset_Chang_Vector.item[i] = delta * Miu;
@@ -216,6 +211,10 @@ namespace NeuralNetwork
         /// <returns></returns>
         public override void Load(String Filename)
         {
+            if (!File.Exists(Filename))
+            {
+                return;
+            }
             FileStream fs = new FileStream(Filename, FileMode.Open);
             BinaryReader r = new BinaryReader(fs);
             this.coefficient = r.ReadDouble();
@@ -236,7 +235,6 @@ namespace NeuralNetwork
             this.Input_Hiddene_Coefficient_Matrix = new Matrix(this.Hidden_Layer_Count, this.Input_Layer_Count);
             this.Hidden_Output_Coefficient_Matrix = new Matrix(this.Output_Layer_Count, this.Hidden_Layer_Count);
             this.Input_Hidden_Coefficient_Change_Matrix = new Matrix(this.Hidden_Layer_Count, this.Input_Layer_Count);
-            //this.Input_Hidden_Coefficient_Delta_Matrix = new Matrix(this.Hidden_Layer_Count, this.Input_Layer_Count);
             this.Hidden_Output_Coefficient_Change_Matrix = new Matrix(this.Output_Layer_Count, this.Hidden_Layer_Count);
             this.Hidden_Output_Coefficient_Delta_Matrix = new Matrix(this.Output_Layer_Count, this.Hidden_Layer_Count);
 

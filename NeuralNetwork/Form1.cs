@@ -14,13 +14,16 @@ namespace NeuralNetwork
 {
     public partial class Form1 : Form
     {
-        Job job;
-        Dictionary<string, Object> stockDictionary;
+        /// <summary>
+        /// 神经网络实例集合
+        /// </summary>
+        public Dictionary<string, StockState> stockDictionary;
+
         public Form1()
         {
             InitializeComponent();
-            action = opserateProcessBar;
-            stockDictionary = new Dictionary<string, Object>();
+            action = operateProcessBar;
+            stockDictionary = new Dictionary<string, StockState>();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -40,92 +43,52 @@ namespace NeuralNetwork
             }
             lbStocks.Tag = tagListBoxStocks;
             sr.Close();
-            //loadDataFile();
-            bpNetwork = new BP(input_days * 4, hidden_layor_count, output_days * 4);
-            initial();
+            Thread thread = new Thread(initial);
+
         }
 
         protected void initial()
         {
-
+            List<String> Stocks = (List<String>)lbStocks.Tag;
+            Job job = new Job(this);
+            Task task = job.addTask(Stocks.Count);
+            for (int i = 0; i < Stocks.Count; i++)
+            {
+                StockState stockState = new StockState(Stocks[i]);
+                stockState.loadData(System.Windows.Forms.Application.StartupPath + Path.DirectorySeparatorChar + Stocks[i] + ".cvs");
+                BP bpNetwork = new BP(Constants.Input_Days * 4, Constants.Hidden_Layor_Count, Constants.Output_Days * 4);
+                stockState.neuralMatrix = bpNetwork;
+                String filename = System.Windows.Forms.Application.StartupPath + Path.DirectorySeparatorChar + Stocks[i] + ".data";
+                bpNetwork.Load(filename);
+                stockDictionary.Add(Stocks[i], stockState);
+                task.process();
+            }
         }
 
         private void btn_training_Click(object sender, EventArgs e)
         {
-            //input_days = 200;
-            //output_days = 3;
-            //training_length = 300;//训练的样本数
-            //hidden_layor_count = 400;
-
-            Template = new Vector(output_days * 4);
-            //bpNetwork = new BP(input_days * 4, hidden_layor_count, output_days * 4);
-
             Thread thread = new Thread(new ThreadStart(training));
-            //thread.Priority = ThreadPriority.Highest;
             thread.Start();
         }
 
         private void btn_save_Click(object sender, EventArgs e)
         {
- //           bpNetwork.Save(System.Windows.Forms.Application.StartupPath + Path.DirectorySeparatorChar + "600036.data");
+            //           bpNetwork.Save(System.Windows.Forms.Application.StartupPath + Path.DirectorySeparatorChar + "600036.data");
         }
 
         private void btn_load_Click(object sender, EventArgs e)
         {
-            //bpNetwork.Load(System.Windows.Forms.Application.StartupPath + Path.DirectorySeparatorChar + "600036.data");
-            //loadData(System.Windows.Forms.Application.StartupPath + Path.DirectorySeparatorChar + "600036.csv");
-            //normalize(bpNetwork.coefficient, bpNetwork.offset);
+
         }
 
         private void btn_predict_Click(object sender, EventArgs e)
         {
-            //input = new Vector(input_days * 4);
-            //for (int j = 0; j < input_days; j++)
-            //{
-            //    input.item[j * 4 + 0] = stockData[j, 0];
-            //    input.item[j * 4 + 1] = stockData[j, 1];
-            //    input.item[j * 4 + 2] = stockData[j, 2];
-            //    input.item[j * 4 + 3] = stockData[j, 3];
-            //}
-
-            //Vector output = bpNetwork.Calculate(input);
-            //Console.Write("Result = ");
-            //for (int i = 0; i < output.UpperBound; i++)
-            //    Console.Write(String.Format("{0} ", (output.item[i] * bpNetwork.coefficient + bpNetwork.offset).ToString("F")));
-
-            //double[] sample = new double[40];
-            //for (int i = 0; i < 7; i++)
-            //{
-            //    sample[i * 4 + 0] = stockData[6 - i, 0];
-            //    sample[i * 4 + 1] = stockData[6 - i, 1];
-            //    sample[i * 4 + 2] = stockData[6 - i, 2];
-            //    sample[i * 4 + 3] = stockData[6 - i, 3];
-            //}
-            //for (int i = 7; i < 10; i++)
-            //{
-            //    sample[i * 4 + 0] = output.item[(i - 7) * 4 + 0];
-            //    sample[i * 4 + 1] = output.item[(i - 7) * 4 + 1];
-            //    sample[i * 4 + 2] = output.item[(i - 7) * 4 + 2];
-            //    sample[i * 4 + 3] = output.item[(i - 7) * 4 + 3];
-            //}
-
-
             drawDailyK(sample);
         }
 
         private void btn_legendretraining_Click(object sender, EventArgs e)
         {
-            //input_days = 150;
-            //output_days = 2;
-            //training_length = 100;//训练的样本数
-            //hidden_layor_count = 25;
-            //input = new Vector(input_days * 4);
-            //Template = new Vector(output_days * 4);
-            //bpNetwork = new LegendreMatrix(input_days * 4, hidden_layor_count, output_days * 4);
 
-            //Thread thread = new Thread(new ThreadStart(training));
-            ////thread.Priority = ThreadPriority.Highest;
-            //thread.Start();
         }
 
 
@@ -136,9 +99,9 @@ namespace NeuralNetwork
 
         public delegate void MyDelegate(float f);
         public MyDelegate action;
-        private void opserateProcessBar(float f)
+        private void operateProcessBar(float f)
         {
-            
+
         }
     }
 }

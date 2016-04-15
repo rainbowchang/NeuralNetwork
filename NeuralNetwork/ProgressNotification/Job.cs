@@ -15,9 +15,9 @@ namespace NeuralNetwork
             this.f = f;
         }
 
-        public Task addTask(int total)
+        public Task addTask(int totalTaskSteps)
         {
-            Task task = new Task(total);
+            Task task = new Task(totalTaskSteps);
             tasks.Add(task);
             task.OnProcessEvent += new Task.ProcessEventHandler(HandlerEvent);
             return task;

@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BP.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="DataFileOperator.cs">
       <SubType>Form</SubType>
     </Compile>
