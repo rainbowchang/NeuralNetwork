@@ -1,74 +1,58 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Net;
-using System.IO;
-
 
 namespace NeuralNetwork
 {
-    public partial class Form1
+    public partial class Functions
     {
         public static void downloadDataFile(String code)
         {
+            String filename = Constants.Execute_Directory + code + ".cvs";
+            String url = "";
+            String url_prefix = @"http://table.finance.yahoo.com/table.csv?s={0}.{1}";
             if (code.Length != 6)
                 return;
 
             if (code.StartsWith("0"))
             {
-
+                String suffix = "sz";
+                url = String.Format(url_prefix, code, suffix);
             }
             else if (code.StartsWith("6"))
             {
-
+                String suffix = "ss";
+                url = String.Format(url_prefix, code, suffix);
             }
             else if (code.StartsWith("3"))
             {
-
+                String suffix = "sz";
+                url = String.Format(url_prefix, code, suffix);
             }
             else
             {
 
             }
+            //下载
+            HttpDownloadFile(url, filename);
         }
 
+    }
+
+    public partial class Form1
+    {
         public void updateAllStocksDataFile()
         {
             List<String> stocksList = (List<String>)lbStocks.Tag;
+            Task task = Job.getInstance().addTask(stocksList.Count);
             foreach (string stockCode in stocksList)
             {
-                downloadDataFile(stockCode);
+                Functions.downloadDataFile(stockCode);
+                task.process();
             }
         }
 
-        public static void HttpDownloadFile(string url, string path)
-        {
-            try
-            {
-                // 设置参数
-                HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
-                //发送请求并获取相应回应数据
-                HttpWebResponse response = request.GetResponse() as HttpWebResponse;
-                //直到request.GetResponse()程序才开始向目标网页发送Post请求
-                Stream responseStream = response.GetResponseStream();
-                //创建本地文件写入流
-                Stream stream = new FileStream(path, FileMode.Create);
-                byte[] bArr = new byte[1024];
-                int size = responseStream.Read(bArr, 0, (int)bArr.Length);
-                while (size > 0)
-                {
-                    stream.Write(bArr, 0, size);
-                    size = responseStream.Read(bArr, 0, (int)bArr.Length);
-                }
-                stream.Close();
-                responseStream.Close();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-        }
+
 
     }
 

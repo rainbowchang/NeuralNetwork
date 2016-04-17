@@ -17,12 +17,12 @@ namespace NeuralNetwork
         /// <summary>
         /// 神经网络实例集合
         /// </summary>
-        public Dictionary<string, StockState> stockDictionary;
+        private Dictionary<string, StockState> stockDictionary;
 
         public Form1()
         {
             InitializeComponent();
-            action = operateProcessBar;
+            Constants.action = operateProcessBar;
             stockDictionary = new Dictionary<string, StockState>();
         }
 
@@ -39,23 +39,22 @@ namespace NeuralNetwork
                 item.Text = ss[0] + "  " + ss[1];
                 item.Tag = ss[0];
                 int index = lbStocks.Items.Add(ss[0] + " " + ss[1]);
-                tagListBoxStocks.Add(ss[0]);
+                tagListBoxStocks.Add(ss[0].Trim());
             }
             lbStocks.Tag = tagListBoxStocks;
             sr.Close();
             Thread thread = new Thread(initial);
-
+            thread.Start();
         }
 
         protected void initial()
         {
             List<String> Stocks = (List<String>)lbStocks.Tag;
-            Job job = new Job(this);
-            Task task = job.addTask(Stocks.Count);
+            Task task = Job.getInstance().addTask(Stocks.Count);
             for (int i = 0; i < Stocks.Count; i++)
             {
                 StockState stockState = new StockState(Stocks[i]);
-                stockState.loadData(System.Windows.Forms.Application.StartupPath + Path.DirectorySeparatorChar + Stocks[i] + ".cvs");
+                stockState.loadHistoryData(System.Windows.Forms.Application.StartupPath + Path.DirectorySeparatorChar + Stocks[i] + ".cvs");
                 BP bpNetwork = new BP(Constants.Input_Days * 4, Constants.Hidden_Layor_Count, Constants.Output_Days * 4);
                 stockState.neuralMatrix = bpNetwork;
                 String filename = System.Windows.Forms.Application.StartupPath + Path.DirectorySeparatorChar + Stocks[i] + ".data";
@@ -67,13 +66,13 @@ namespace NeuralNetwork
 
         private void btn_training_Click(object sender, EventArgs e)
         {
-            Thread thread = new Thread(new ThreadStart(training));
-            thread.Start();
+            //Thread thread = new Thread(new ThreadStart(training));
+            //thread.Start();
         }
 
         private void btn_save_Click(object sender, EventArgs e)
         {
-            //           bpNetwork.Save(System.Windows.Forms.Application.StartupPath + Path.DirectorySeparatorChar + "600036.data");
+
         }
 
         private void btn_load_Click(object sender, EventArgs e)
@@ -83,7 +82,7 @@ namespace NeuralNetwork
 
         private void btn_predict_Click(object sender, EventArgs e)
         {
-            drawDailyK(sample);
+            //drawDailyK(sample);
         }
 
         private void btn_legendretraining_Click(object sender, EventArgs e)
@@ -97,11 +96,18 @@ namespace NeuralNetwork
             //MessageBox.Show(((List<String> )lbStocks.Tag)[lbStocks.SelectedIndex]);
         }
 
-        public delegate void MyDelegate(float f);
-        public MyDelegate action;
         private void operateProcessBar(float f)
         {
 
+        }
+
+        private void updateAll()
+        {
+            foreach (StockState state in stockDictionary.Values)
+            {
+                Thread tread = new Thread(state.update);
+                tread.Start();
+            }
         }
     }
 }

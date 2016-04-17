@@ -34,7 +34,7 @@ namespace NeuralNetwork
             Boolean predictFlag = false;
             for (int i = 0; i < d; i++)
             {
-                if (i + output_days >= d)
+                if (i + Constants.Output_Days >= d)
                     predictFlag = true;
                 else
                     predictFlag = false;

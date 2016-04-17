@@ -8,11 +8,18 @@ namespace NeuralNetwork
     class Job
     {
         List<Task> tasks;
-        Form1 f;
-        public Job(Form1 f)
+        private static Job instance = null;
+        public static Job getInstance()
+        {
+            if (instance == null)
+            {
+                instance = new Job();
+            }
+            return instance;
+        }
+        private Job()
         {
             tasks = new List<Task>();
-            this.f = f;
         }
 
         public Task addTask(int totalTaskSteps)
@@ -24,7 +31,7 @@ namespace NeuralNetwork
         }
 
         protected void HandlerEvent(object sender, ProcessEventArgs e){
-            f.action(getPercentage());
+            Constants.action(getPercentage());
         }
 
         public float getPercentage()
@@ -36,6 +43,9 @@ namespace NeuralNetwork
             {
                 c += task.percent;
             }
+            float f = c / tasks.Count;
+            if (f > 0.999999f)
+                instance = null;
             return c / tasks.Count;
         }
     }
@@ -64,6 +74,12 @@ namespace NeuralNetwork
             {
                 return current * 1.0f / total;
             }
+        }
+
+        public void finish()
+        {
+            current = total;
+            OnRaiseProcessEvent(new ProcessEventArgs(percent));
         }
 
         public delegate void ProcessEventHandler(object sender, ProcessEventArgs e);

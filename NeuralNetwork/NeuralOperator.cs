@@ -20,6 +20,12 @@ namespace NeuralNetwork
         double coefficient;
         double offset;
         Vector Template;
+        Task task;
+
+        int Input_Days;
+        int Output_Days;
+        int Training_Length;//训练的样本数
+        int Hidden_Layor_Count;
 
         public StockState(String code)
         {
@@ -40,7 +46,7 @@ namespace NeuralNetwork
         {
             double diff = max - min;
             double mid = min + (diff / 2.0);
-            coefficient = diff * 10.0;
+            coefficient = diff * 2.0;
             offset = mid;
             normalize(coefficient, offset);
         }
@@ -60,15 +66,21 @@ namespace NeuralNetwork
         /// 从excel文件加载历史数据
         /// </summary>
         /// <param name="path"></param>
-        public void loadData(string path)
+        public void loadHistoryData(string path)
         {
+            if (!File.Exists(path))
+            {
+                Functions.downloadDataFile(code);
+            }
+
             Excel._Application excel = null;
+            Excel.Workbook workbook = null;
             try
             {
                 excel = new Excel.Application();
                 excel.Visible = false;
                 Excel.Workbooks workbooks = excel.Workbooks;
-                Excel.Workbook workbook = workbooks.Open(path);
+                workbook = workbooks.Open(path);
                 Excel.Worksheet worksheet = workbook.Worksheets[1];
                 int tableRowNo = 0;
                 max = min = excel.Cells[2, 2].Value;//初始化！！！！！！
@@ -93,7 +105,6 @@ namespace NeuralNetwork
                     if (tableRowNo >= Constants.UpboundRow)
                         break;
                 }
-
                 normalize();
             }
             catch (Exception ex)
@@ -104,7 +115,16 @@ namespace NeuralNetwork
             }
             finally
             {
-                excel.Quit();
+                try
+                {
+                    workbook.Close();
+                }
+                catch (Exception) { }
+                try
+                {
+                    excel.Quit();
+                }
+                catch (Exception) { }
             }
         }
 
@@ -155,7 +175,8 @@ namespace NeuralNetwork
         */
         public void training()
         {
-            for (int n = 0; n <= 12; n++)  //n是循环次数
+            task = Job.getInstance().addTask(Constants.TrainingCircles * (Constants.Training_Length - Constants.Output_Days + 1));
+            for (int n = 0; n <= Constants.TrainingCircles; n++)  //n是循环次数
                 for (int i = Constants.Training_Length; i >= Constants.Output_Days; i--)
                 {
                     for (int j = 0; j < Constants.Input_Days; j++)
@@ -178,14 +199,36 @@ namespace NeuralNetwork
                     {
                         neuralMatrix.Training(input, Template, 5);
                     }
+                    catch (ConvergenceException)
+                    {
+                        break;
+                    }
                     catch (Exception ex)
                     {
                         Console.WriteLine(ex.Message);
+                        task.finish();
                         return;
                     }
+                    task.process();
                 }
             Console.WriteLine("Training finish.");
             Console.ReadLine();
+        }
+
+        public void update()
+        {
+            neuralMatrix = null;
+
+
+            //重建网络
+            neuralMatrix = new BP(Constants.Input_Days * 4, Constants.Hidden_Layor_Count, Constants.Output_Days * 4);
+            loadHistoryData("");
+            //重新训练
+            training();
+            //保存
+            save("");
+            //给出预测值
+            predict();
         }
     }
 }

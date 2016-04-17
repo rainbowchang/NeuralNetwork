@@ -129,7 +129,7 @@ namespace NeuralNetwork
                 Console.WriteLine("Calculate finish: " + DateTime.Now.ToString());
                 CalculateError();
                 if (Delta > Constants.MaxError)
-                    throw new Exception("So much error, stop training.");
+                    throw new ConvergenceException("So much error, stop training.");
                 CalculateDelta_Hidden_Output_Coefficient();
                 CalculateDelta_Input_Hidden_Coefficient();
                 Console.WriteLine("CalculateDelta_Input_Hidden_Coefficient finish: " + DateTime.Now.ToString());
