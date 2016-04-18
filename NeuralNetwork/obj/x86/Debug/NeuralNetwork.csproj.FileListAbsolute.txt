@@ -15,7 +15,6 @@ G:\Code\VS.net\NeuralNetwork\NeuralNetwork\obj\x86\Debug\NeuralNetwork.exe
 G:\Code\VS.net\NeuralNetwork\NeuralNetwork\obj\x86\Debug\NeuralNetwork.pdb
 G:\Code\VS.net\NeuralNetwork\NeuralNetwork\bin\Debug\NeuralNetwork.exe
 G:\Code\VS.net\NeuralNetwork\NeuralNetwork\bin\Debug\NeuralNetwork.pdb
-G:\Code\VS.net\NeuralNetwork\NeuralNetwork\obj\x86\Debug\NeuralNetwork.csprojResolveAssemblyReference.cache
 G:\Code\VS.net\NeuralNetwork\NeuralNetwork\obj\x86\Debug\NeuralNetwork.Form1.resources
 G:\Code\VS.net\NeuralNetwork\NeuralNetwork\obj\x86\Debug\NeuralNetwork.Properties.Resources.resources
 G:\Code\VS.net\NeuralNetwork\NeuralNetwork\obj\x86\Debug\NeuralNetwork.csproj.GenerateResource.Cache

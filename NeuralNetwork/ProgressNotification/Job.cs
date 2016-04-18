@@ -31,7 +31,7 @@ namespace NeuralNetwork
         }
 
         protected void HandlerEvent(object sender, ProcessEventArgs e){
-            Constants.action(getPercentage());
+            Constants.ShowProcessBarAction(getPercentage());
         }
 
         public float getPercentage()

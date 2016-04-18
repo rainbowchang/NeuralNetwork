@@ -8,7 +8,7 @@ namespace NeuralNetwork
     {
         public static void downloadDataFile(String code)
         {
-            String filename = Constants.Execute_Directory + code + ".cvs";
+            String filename = Constants.Execute_Directory + code + ".csv";
             String url = "";
             String url_prefix = @"http://table.finance.yahoo.com/table.csv?s={0}.{1}";
             if (code.Length != 6)

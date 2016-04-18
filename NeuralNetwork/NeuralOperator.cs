@@ -109,7 +109,7 @@ namespace NeuralNetwork
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Constants.AppendLogBoxAction(ex.Message);
                 Console.ReadLine();
                 throw ex;
             }
@@ -128,8 +128,14 @@ namespace NeuralNetwork
             }
         }
 
-        public void save(String filename)
+        public void loadNeuralMatrixData(String filename)
         {
+            neuralMatrix.Load(filename);
+        }
+
+        public void save()
+        {
+            String filename = Constants.Execute_Directory + code + ".data";
             neuralMatrix.Save(filename);
         }
 
@@ -147,7 +153,7 @@ namespace NeuralNetwork
             Vector output = neuralMatrix.Calculate(input);
             Console.Write("Result = ");
             for (int i = 0; i < output.UpperBound; i++)
-                Console.Write(String.Format("{0} ", (output.item[i] * coefficient + offset).ToString("F")));
+                Constants.AppendLogBoxAction(String.Format("{0} ", (output.item[i] * coefficient + offset).ToString("F")));
 
             double[] sample = new double[40];
             for (int i = 0; i < 7; i++)
@@ -194,7 +200,7 @@ namespace NeuralNetwork
                         Template.item[d * 4 + 3] = historyDataNormalize[i - d - 1, 3];
                     }
 
-                    Console.WriteLine(String.Format("N = {0}, I = {1}", n, i));
+                    Constants.AppendLogBoxAction(String.Format("N = {0}, I = {1}", n, i));
                     try
                     {
                         neuralMatrix.Training(input, Template, 5);
@@ -205,13 +211,13 @@ namespace NeuralNetwork
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine(ex.Message);
+                        Constants.AppendLogBoxAction(ex.Message);
                         task.finish();
                         return;
                     }
                     task.process();
                 }
-            Console.WriteLine("Training finish.");
+            Constants.AppendLogBoxAction("Training finish.");
             Console.ReadLine();
         }
 
@@ -226,7 +232,7 @@ namespace NeuralNetwork
             //重新训练
             training();
             //保存
-            save("");
+            save();
             //给出预测值
             predict();
         }

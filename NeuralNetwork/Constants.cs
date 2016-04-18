@@ -7,6 +7,8 @@ using System.IO;
 
 namespace NeuralNetwork
 {
+    public delegate void ShowProcessBar(float f);
+    public delegate void AppendLogBox(String text);
     class Constants
     {
         public const Double MaxError = 1000000.0;
@@ -23,9 +25,8 @@ namespace NeuralNetwork
         /// 数据的最大行数(天数)
         /// </summary>
         public const int UpboundRow = 900;
-
-        public delegate void MyDelegate(float f);
-        public static MyDelegate action;
+        public static ShowProcessBar ShowProcessBarAction;
+        public static AppendLogBox AppendLogBoxAction;
         public const int TrainingCircles = 12;
         public static readonly String Execute_Directory;
 
@@ -61,7 +62,7 @@ namespace NeuralNetwork
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Constants.AppendLogBoxAction(ex.Message);
             }
         }
     }
