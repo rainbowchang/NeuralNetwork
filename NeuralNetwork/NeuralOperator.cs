@@ -34,6 +34,7 @@ namespace NeuralNetwork
             historyDataNormalize = new double[Constants.UpboundRow, 4];
             predictData = new double[Constants.Output_Days * 4];
             predictDataNormalize = new double[Constants.Output_Days * 4];
+            initial();
         }
 
         public void initial()
@@ -111,7 +112,7 @@ namespace NeuralNetwork
             {
                 Constants.AppendLogBoxAction(ex.Message);
                 Console.ReadLine();
-                throw ex;
+                //throw ex;
             }
             finally
             {
@@ -182,7 +183,7 @@ namespace NeuralNetwork
         public void training()
         {
             task = Job.getInstance().addTask(Constants.TrainingCircles * (Constants.Training_Length - Constants.Output_Days + 1));
-            for (int n = 0; n <= Constants.TrainingCircles; n++)  //n是循环次数
+            for (int n = 0; n < Constants.TrainingCircles; n++)  //n是循环次数
                 for (int i = Constants.Training_Length; i >= Constants.Output_Days; i--)
                 {
                     for (int j = 0; j < Constants.Input_Days; j++)
@@ -205,9 +206,11 @@ namespace NeuralNetwork
                     {
                         neuralMatrix.Training(input, Template, 5);
                     }
-                    catch (ConvergenceException)
+                    catch (ConvergenceException ex)
                     {
-                        break;
+                        Constants.AppendLogBoxAction(code + ex.Message);
+                        task.finish();
+                        return;
                     }
                     catch (Exception ex)
                     {
@@ -217,8 +220,9 @@ namespace NeuralNetwork
                     }
                     task.process();
                 }
-            Constants.AppendLogBoxAction("Training finish.");
-            Console.ReadLine();
+            save();
+            //Constants.AppendLogBoxAction("Training finish.");
+            //Console.ReadLine();
         }
 
         public void update()

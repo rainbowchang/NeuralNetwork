@@ -103,7 +103,7 @@ namespace NeuralNetwork
             for (int k = 0; k < Output_Layer_Count; k++)
             {
                 Output_Layer_Vector.item[k] = SecondNeuronVector[k].NeuronFunction(Output_Layer_Vector.item[k]);
-                Constants.AppendLogBoxAction("{0}={1}  ", k, Output_Layer_Vector.item[k].ToString());
+                //Constants.AppendLogBoxAction(String.Format("{0}={1}  ", k, Output_Layer_Vector.item[k].ToString()));
             }
         }
 
@@ -126,19 +126,20 @@ namespace NeuralNetwork
             for (int a = 0; a < Loops; a++)
             {
                 Calculate();
-                Constants.AppendLogBoxAction("Calculate finish: " + DateTime.Now.ToString());
+                //Constants.AppendLogBoxAction("Calculate finish: " + DateTime.Now.ToString());
                 CalculateError();
+                Constants.AppendLogBoxAction("Delta = " + Delta);
                 if (Delta > Constants.MaxError)
                     throw new ConvergenceException("So much error, stop training.");
                 CalculateDelta_Hidden_Output_Coefficient();
                 CalculateDelta_Input_Hidden_Coefficient();
-                Constants.AppendLogBoxAction("CalculateDelta_Input_Hidden_Coefficient finish: " + DateTime.Now.ToString());
+                //Constants.AppendLogBoxAction("CalculateDelta_Input_Hidden_Coefficient finish: " + DateTime.Now.ToString());
                 Hidden_Output_Coefficient_Matrix.add(Hidden_Output_Coefficient_Change_Matrix);
                 Input_Hiddene_Coefficient_Matrix.add(Input_Hidden_Coefficient_Change_Matrix);
-                Constants.AppendLogBoxAction("Matrix adjust finish: " + DateTime.Now.ToString());
+                //Constants.AppendLogBoxAction("Matrix adjust finish: " + DateTime.Now.ToString());
                 Hidden_Offset_Vector.add(Hidden_Offset_Chang_Vector);
                 Output_Offset_Vector.add(Output_Offset_Change_Vector);
-                Constants.AppendLogBoxAction("Vector adjust finish: " + DateTime.Now.ToString());
+                //Constants.AppendLogBoxAction("Vector adjust finish: " + DateTime.Now.ToString());
                 if (Delta < Constants.MinError)
                     break;
             }
@@ -159,7 +160,7 @@ namespace NeuralNetwork
             }
 
             Delta = e / 2.0;
-            Constants.AppendLogBoxAction(String.Format("Delta = {0}", Delta.ToString()));
+            //Constants.AppendLogBoxAction(String.Format("Delta = {0}", Delta.ToString()));
             return Delta;
         }
 

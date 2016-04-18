@@ -59,7 +59,7 @@ namespace NeuralNetwork
                 BP bpNetwork = new BP(Constants.Input_Days * 4, Constants.Hidden_Layor_Count, Constants.Output_Days * 4);
                 stockState.neuralMatrix = bpNetwork;
                 String filename = System.Windows.Forms.Application.StartupPath + Path.DirectorySeparatorChar + Stocks[i] + ".data";
-                stockState.loadHistoryData(filename);
+                stockState.loadNeuralMatrixData(filename);
                 stockDictionary.Add(Stocks[i], stockState);
                 task.process();
             }
@@ -114,7 +114,7 @@ namespace NeuralNetwork
         private void appendTextBox(String text)
         {
             Console.WriteLine(text);
-            tbLog.Text += "\n" + text;
+            //tbLog.Text += text + Environment.NewLine;
         }
         private void invoke_AppendLogText(String text)
         {
