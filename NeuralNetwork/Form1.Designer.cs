@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.btn_bptraining = new System.Windows.Forms.Button();
             this.btn_legendretraining = new System.Windows.Forms.Button();
             this.pic_box1 = new System.Windows.Forms.PictureBox();
@@ -35,7 +36,11 @@
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.btn_update = new System.Windows.Forms.Button();
             this.tbLog = new System.Windows.Forms.TextBox();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.menuTrain = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuPredict = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pic_box1)).BeginInit();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // btn_bptraining
@@ -68,6 +73,7 @@
             // 
             // lbStocks
             // 
+            this.lbStocks.ContextMenuStrip = this.contextMenuStrip1;
             this.lbStocks.FormattingEnabled = true;
             this.lbStocks.ItemHeight = 12;
             this.lbStocks.Location = new System.Drawing.Point(13, 13);
@@ -101,6 +107,28 @@
             this.tbLog.Size = new System.Drawing.Size(837, 115);
             this.tbLog.TabIndex = 9;
             // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuTrain,
+            this.menuPredict});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(153, 70);
+            // 
+            // menuTrain
+            // 
+            this.menuTrain.Name = "menuTrain";
+            this.menuTrain.Size = new System.Drawing.Size(152, 22);
+            this.menuTrain.Text = "train";
+            this.menuTrain.Click += new System.EventHandler(this.menuTrain_Click);
+            // 
+            // menuPredict
+            // 
+            this.menuPredict.Name = "menuPredict";
+            this.menuPredict.Size = new System.Drawing.Size(152, 22);
+            this.menuPredict.Text = "predict";
+            this.menuPredict.Click += new System.EventHandler(this.menuPredict_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -117,6 +145,7 @@
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pic_box1)).EndInit();
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -131,6 +160,9 @@
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Button btn_update;
         private System.Windows.Forms.TextBox tbLog;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem menuTrain;
+        private System.Windows.Forms.ToolStripMenuItem menuPredict;
     }
 }
 

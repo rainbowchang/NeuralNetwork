@@ -18,7 +18,7 @@ namespace NeuralNetwork
         /// 神经网络实例集合
         /// </summary>
         private Dictionary<string, StockState> stockDictionary;
-
+        private List<String> Stocks;
         public Form1()
         {
             InitializeComponent();
@@ -50,7 +50,7 @@ namespace NeuralNetwork
 
         protected void initial()
         {
-            List<String> Stocks = (List<String>)lbStocks.Tag;
+            Stocks = (List<String>)lbStocks.Tag;
             Task task = Job.getInstance().addTask(Stocks.Count);
             for (int i = 0; i < Stocks.Count; i++)
             {
@@ -83,8 +83,13 @@ namespace NeuralNetwork
         private void lbStocks_MouseUp(object sender, MouseEventArgs e)
         {
             //MessageBox.Show(((List<String> )lbStocks.Tag)[lbStocks.SelectedIndex]);
+            int i = lbStocks.SelectedIndex;
+            if (i < 0)
+                return;
+            StockState state = stockDictionary[Stocks[i]];
+            if (state.predictData != null)
+                drawDailyK(state.predictData);
         }
-
 
         private void invoke_ShowProcessBar(float f)
         {
@@ -122,6 +127,42 @@ namespace NeuralNetwork
             object[] Params = { text };
             this.Invoke(func, Params);
 
+        }
+
+        private void menuTrain_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                int i = lbStocks.SelectedIndex;
+                if (i < 0)
+                    return;
+
+                StockState state = stockDictionary[Stocks[i]];
+                state.initial();
+                Thread thrd = new Thread(state.training);
+                thrd.Start();
+            }
+            catch (Exception ex)
+            {
+                invoke_AppendLogText(ex.Message);
+            }
+        }
+
+        private void menuPredict_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                int i = lbStocks.SelectedIndex;
+                if (i < 0)
+                    return;
+
+                StockState state = stockDictionary[Stocks[i]];
+                state.predict();
+            }
+            catch (Exception ex)
+            {
+                invoke_AppendLogText(ex.Message);
+            }
         }
 
     }

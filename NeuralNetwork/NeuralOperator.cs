@@ -10,8 +10,8 @@ namespace NeuralNetwork
         public INeuralMatrix neuralMatrix;
         public double[,] historyData;
         public double[,] historyDataNormalize;
-        public double[] predictData;
-        public double[] predictDataNormalize;
+        public double[] predictData = null;
+        //public double[] predictDataNormalize;
         /// <summary>
         /// 输入向量
         /// </summary>
@@ -32,13 +32,14 @@ namespace NeuralNetwork
             this.code = code;
             historyData = new double[Constants.UpboundRow, 4];
             historyDataNormalize = new double[Constants.UpboundRow, 4];
-            predictData = new double[Constants.Output_Days * 4];
-            predictDataNormalize = new double[Constants.Output_Days * 4];
+            //predictData = new double[Constants.Output_Days * 4];
+            //predictDataNormalize = new double[Constants.Output_Days * 4];
             initial();
         }
 
         public void initial()
         {
+            neuralMatrix = new BP(Constants.Input_Days * 4, Constants.Hidden_Layor_Count, Constants.Output_Days * 4);
             input = new Vector(Constants.Input_Days * 4);
             Template = new Vector(Constants.Output_Days * 4);
         }
@@ -145,10 +146,10 @@ namespace NeuralNetwork
             input = new Vector(Constants.Input_Days * 4);
             for (int j = 0; j < Constants.Input_Days; j++)
             {
-                input.item[j * 4 + 0] = historyData[j, 0];
-                input.item[j * 4 + 1] = historyData[j, 1];
-                input.item[j * 4 + 2] = historyData[j, 2];
-                input.item[j * 4 + 3] = historyData[j, 3];
+                input.item[j * 4 + 0] = historyDataNormalize[j, 0];
+                input.item[j * 4 + 1] = historyDataNormalize[j, 1];
+                input.item[j * 4 + 2] = historyDataNormalize[j, 2];
+                input.item[j * 4 + 3] = historyDataNormalize[j, 3];
             }
 
             Vector output = neuralMatrix.Calculate(input);
@@ -156,20 +157,25 @@ namespace NeuralNetwork
             for (int i = 0; i < output.UpperBound; i++)
                 Constants.AppendLogBoxAction(String.Format("{0} ", (output.item[i] * coefficient + offset).ToString("F")));
 
-            double[] sample = new double[40];
+            predictData = new double[40];
             for (int i = 0; i < 7; i++)
             {
-                sample[i * 4 + 0] = historyData[6 - i, 0];
-                sample[i * 4 + 1] = historyData[6 - i, 1];
-                sample[i * 4 + 2] = historyData[6 - i, 2];
-                sample[i * 4 + 3] = historyData[6 - i, 3];
+                predictData[i * 4 + 0] = historyData[6 - i, 0];
+                predictData[i * 4 + 1] = historyData[6 - i, 1];
+                predictData[i * 4 + 2] = historyData[6 - i, 2];
+                predictData[i * 4 + 3] = historyData[6 - i, 3];
             }
             for (int i = 7; i < 10; i++)
             {
-                sample[i * 4 + 0] = output.item[(i - 7) * 4 + 0];
-                sample[i * 4 + 1] = output.item[(i - 7) * 4 + 1];
-                sample[i * 4 + 2] = output.item[(i - 7) * 4 + 2];
-                sample[i * 4 + 3] = output.item[(i - 7) * 4 + 3];
+                predictData[i * 4 + 0] = output.item[(i - 7) * 4 + 0] * coefficient + offset;
+                predictData[i * 4 + 1] = output.item[(i - 7) * 4 + 1] * coefficient + offset;
+                predictData[i * 4 + 2] = output.item[(i - 7) * 4 + 2] * coefficient + offset;
+                predictData[i * 4 + 3] = output.item[(i - 7) * 4 + 3] * coefficient + offset;
+            }
+
+            for (int i = 0; i < 40; i++)
+            {
+                Constants.AppendLogBoxAction(predictData[i].ToString("F"));
             }
         }
 
@@ -182,7 +188,46 @@ namespace NeuralNetwork
         */
         public void training()
         {
-            task = Job.getInstance().addTask(Constants.TrainingCircles * (Constants.Training_Length - Constants.Output_Days + 1));
+            Constants.AppendLogBoxAction(String.Format("Max = {0}; Min = {1}; Offset = {2}; Coeffi = {3}", max, min, offset, coefficient));
+            task = Job.getInstance().addTask((Constants.TrainingCircles + 2) * (Constants.Training_Length - Constants.Output_Days + 1));
+            for (int n = 0; n < 2; n++)
+                for (int i = Constants.Output_Days; i <= Constants.Training_Length; i++)
+                {
+                    for (int j = 0; j < Constants.Input_Days; j++)
+                    {
+                        input.item[j * 4 + 0] = historyDataNormalize[i + j, 0];
+                        input.item[j * 4 + 1] = historyDataNormalize[i + j, 1];
+                        input.item[j * 4 + 2] = historyDataNormalize[i + j, 2];
+                        input.item[j * 4 + 3] = historyDataNormalize[i + j, 3];
+                    }
+                    for (int d = 0; d < Constants.Output_Days; d++)
+                    {
+                        Template.item[d * 4 + 0] = historyDataNormalize[i - d - 1, 0];
+                        Template.item[d * 4 + 1] = historyDataNormalize[i - d - 1, 1];
+                        Template.item[d * 4 + 2] = historyDataNormalize[i - d - 1, 2];
+                        Template.item[d * 4 + 3] = historyDataNormalize[i - d - 1, 3];
+                    }
+
+                    Constants.AppendLogBoxAction(String.Format("N = {0}, I = {1}", n, i));
+                    try
+                    {
+                        neuralMatrix.Training(input, Template, 2);
+                    }
+                    catch (ConvergenceException ex)
+                    {
+                        Constants.AppendLogBoxAction(code + ex.Message);
+                        task.finish();
+                        return;
+                    }
+                    catch (Exception ex)
+                    {
+                        Constants.AppendLogBoxAction(ex.Message);
+                        task.finish();
+                        return;
+                    }
+                    task.process();
+                }
+
             for (int n = 0; n < Constants.TrainingCircles; n++)  //n是循环次数
                 for (int i = Constants.Training_Length; i >= Constants.Output_Days; i--)
                 {
@@ -204,7 +249,7 @@ namespace NeuralNetwork
                     Constants.AppendLogBoxAction(String.Format("N = {0}, I = {1}", n, i));
                     try
                     {
-                        neuralMatrix.Training(input, Template, 5);
+                        neuralMatrix.Training(input, Template, 6);
                     }
                     catch (ConvergenceException ex)
                     {
@@ -221,17 +266,11 @@ namespace NeuralNetwork
                     task.process();
                 }
             save();
-            //Constants.AppendLogBoxAction("Training finish.");
-            //Console.ReadLine();
         }
 
         public void update()
         {
             neuralMatrix = null;
-
-
-            //重建网络
-            neuralMatrix = new BP(Constants.Input_Days * 4, Constants.Hidden_Layor_Count, Constants.Output_Days * 4);
             loadHistoryData("");
             //重新训练
             training();

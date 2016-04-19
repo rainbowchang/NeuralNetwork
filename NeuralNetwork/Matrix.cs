@@ -61,7 +61,6 @@ namespace NeuralNetwork
                 for (int j = 0; j < this.ColNumber; j++)
                     this.item[i, j] = this.item[i, j] + m2.item[i, j];
             TimeSpan dt2 = DateTime.Now - dt;
-            //Constants.AppendLogBoxAction("Matrix.add() spend " + dt2.ToString());
         }
 
     }
@@ -142,7 +141,6 @@ namespace NeuralNetwork
                 result.item[x] = k;
             }
             TimeSpan dt2 = DateTime.Now - dt;
-            //Constants.AppendLogBoxAction("Vector.multi() spend " + dt2.ToString());
             return result;
         }
     }
