@@ -19,6 +19,7 @@ namespace NeuralNetwork
         /// </summary>
         private Dictionary<string, StockState> stockDictionary;
         private List<String> Stocks;
+        private Boolean isInitializing = true;
         public Form1()
         {
             InitializeComponent();
@@ -63,6 +64,7 @@ namespace NeuralNetwork
                 stockDictionary.Add(Stocks[i], stockState);
                 task.process();
             }
+            isInitializing = false;
         }
 
         private void btn_training_Click(object sender, EventArgs e)
@@ -82,7 +84,8 @@ namespace NeuralNetwork
 
         private void lbStocks_MouseUp(object sender, MouseEventArgs e)
         {
-            //MessageBox.Show(((List<String> )lbStocks.Tag)[lbStocks.SelectedIndex]);
+            if (isInitializing)
+                return;
             int i = lbStocks.SelectedIndex;
             if (i < 0)
                 return;

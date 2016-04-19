@@ -48,7 +48,7 @@ namespace NeuralNetwork
         {
             double diff = max - min;
             double mid = min + (diff / 2.0);
-            coefficient = diff * 2.0;
+            coefficient = diff * 1.0;
             offset = mid;
             normalize(coefficient, offset);
         }
@@ -158,19 +158,19 @@ namespace NeuralNetwork
                 Constants.AppendLogBoxAction(String.Format("{0} ", (output.item[i] * coefficient + offset).ToString("F")));
 
             predictData = new double[40];
-            for (int i = 0; i < 7; i++)
+            for (int i = 0; i < 10 - Constants.Output_Days; i++)
             {
-                predictData[i * 4 + 0] = historyData[6 - i, 0];
-                predictData[i * 4 + 1] = historyData[6 - i, 1];
-                predictData[i * 4 + 2] = historyData[6 - i, 2];
-                predictData[i * 4 + 3] = historyData[6 - i, 3];
+                predictData[i * 4 + 0] = historyData[10 - Constants.Output_Days - 1 - i, 0];
+                predictData[i * 4 + 1] = historyData[10 - Constants.Output_Days - 1 - i, 1];
+                predictData[i * 4 + 2] = historyData[10 - Constants.Output_Days - 1 - i, 2];
+                predictData[i * 4 + 3] = historyData[10 - Constants.Output_Days - 1 - i, 3];
             }
-            for (int i = 7; i < 10; i++)
+            for (int i = 10 - Constants.Output_Days; i < 10; i++)
             {
-                predictData[i * 4 + 0] = output.item[(i - 7) * 4 + 0] * coefficient + offset;
-                predictData[i * 4 + 1] = output.item[(i - 7) * 4 + 1] * coefficient + offset;
-                predictData[i * 4 + 2] = output.item[(i - 7) * 4 + 2] * coefficient + offset;
-                predictData[i * 4 + 3] = output.item[(i - 7) * 4 + 3] * coefficient + offset;
+                predictData[i * 4 + 0] = output.item[(i - (10 - Constants.Output_Days)) * 4 + 0] * coefficient + offset;
+                predictData[i * 4 + 1] = output.item[(i - (10 - Constants.Output_Days)) * 4 + 1] * coefficient + offset;
+                predictData[i * 4 + 2] = output.item[(i - (10 - Constants.Output_Days)) * 4 + 2] * coefficient + offset;
+                predictData[i * 4 + 3] = output.item[(i - (10 - Constants.Output_Days)) * 4 + 3] * coefficient + offset;
             }
 
             for (int i = 0; i < 40; i++)
