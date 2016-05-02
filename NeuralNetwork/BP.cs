@@ -61,7 +61,7 @@ namespace NeuralNetwork
 
             for (int i = 0; i < Hidden_Layer_Count; i++)
                 for (int j = 0; j < Input_Layer_Count; j++)
-                    Input_Hiddene_Coefficient_Matrix.item[i, j] = rnd.NextDouble() - 0.5;
+                    Input_Hiddene_Coefficient_Matrix.item[i, j] = (rnd.NextDouble() - 0.5) / (1 + 0.001 * i);
 
             for (int k = 0; k < Output_Layer_Count; k++)
                 for (int i = 0; i < Hidden_Layer_Count; i++)
@@ -113,6 +113,7 @@ namespace NeuralNetwork
             return Output_Layer_Vector;
         }
 
+        private int Loops = 0;
         /// <summary>
         /// 网络训练函数。 如果误差超大会抛出错误。
         /// </summary>
@@ -122,7 +123,18 @@ namespace NeuralNetwork
         {
             this.Input_Layer_Vector = Input_Vector;
             this.Template_Vector = Template_Vector;
-            for (int a = 0; a < Loops; a++)
+            this.Loops = Loops;
+            TrainingOnce();
+            if (Delta > 0.000001)
+            {
+                TrainingOnce();
+            }
+
+        }
+
+        private void TrainingOnce()
+        {
+            for (int a = 0; a < this.Loops; a++)
             {
                 Calculate();
                 CalculateError();
@@ -134,8 +146,8 @@ namespace NeuralNetwork
                 Input_Hiddene_Coefficient_Matrix.add(Input_Hidden_Coefficient_Change_Matrix);
                 Hidden_Offset_Vector.add(Hidden_Offset_Chang_Vector);
                 Output_Offset_Vector.add(Output_Offset_Change_Vector);
-                if (Delta < Constants.MinError)
-                    break;
+                //if (Delta < Constants.MinError)
+                //    break;
             }
             Constants.AppendLogBoxAction("Delta = " + Delta);
         }
