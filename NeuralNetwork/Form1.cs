@@ -57,8 +57,8 @@ namespace NeuralNetwork
             {
                 StockState stockState = new StockState(Stocks[i]);
                 stockState.loadHistoryData(System.Windows.Forms.Application.StartupPath + Path.DirectorySeparatorChar + Stocks[i] + ".csv");
-                BP bpNetwork = new BP(Constants.Input_Days * 4, Constants.Hidden_Layor_Count, Constants.Output_Days * 4);
-                stockState.neuralMatrix = bpNetwork;
+                //BP bpNetwork = new BP(Constants.Input_Days * 4, Constants.Hidden_Layor_Count, Constants.Output_Days * 4);
+                //stockState.neuralMatrix = bpNetwork;
                 String filename = System.Windows.Forms.Application.StartupPath + Path.DirectorySeparatorChar + Stocks[i] + ".data";
                 stockState.loadNeuralMatrixData(filename);
                 stockDictionary.Add(Stocks[i], stockState);
