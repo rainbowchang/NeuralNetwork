@@ -211,7 +211,7 @@ namespace NeuralNetwork
                     Constants.AppendLogBoxAction(String.Format("N = {0}, I = {1}", n, i));
                     try
                     {
-                        neuralMatrix.Training(input, Template, 2);
+                        neuralMatrix.Training(input, Template, 1);
                     }
                     catch (ConvergenceException ex)
                     {
@@ -249,7 +249,7 @@ namespace NeuralNetwork
                     Constants.AppendLogBoxAction(String.Format("N = {0}, I = {1}", n, i));
                     try
                     {
-                        neuralMatrix.Training(input, Template, 6);
+                        neuralMatrix.Training(input, Template, 8);
                     }
                     catch (ConvergenceException ex)
                     {

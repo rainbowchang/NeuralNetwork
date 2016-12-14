@@ -12,12 +12,12 @@ namespace NeuralNetwork
     class Constants
     {
         public const Double MaxError = 1000000000.0;
-        public const Double MinError = 0.0000001;
+        public const Double MinError = 0.000000000001;
 
         public const int Input_Days = 40;
         public const int Output_Days = 1;
         public const int Training_Length = 300;//训练的样本数
-        public const int Hidden_Layor_Count = 200;
+        public const int Hidden_Layor_Count = 201;
 
         public const double Miu = 0.01;
         public const double Miu2 = 0.05;
@@ -28,7 +28,7 @@ namespace NeuralNetwork
         public const int UpboundRow = 900;
         public static ShowProcessBar ShowProcessBarAction;
         public static AppendLogBox AppendLogBoxAction;
-        public const int TrainingCircles = 20;
+        public const int TrainingCircles = 10;
         public static readonly String Execute_Directory;
 
         static Constants()
